@@ -9,6 +9,26 @@ class Board
     @root_node = nil
   end
 
+  def make_move(position, destination, piece)
+    case piece
+    when 'knight'
+      # update_board method will be used for all of the occurrences here.
+      knight_moves(position, destination)
+    when 'rook'
+      # rook_moves(position, destination)
+    when 'bishop'
+      # bishop_moves
+    when 'queen'
+      # queen_moves
+    when 'pawn'
+      # pawn_moves
+    when 'king'
+      # king_moves
+    end
+  end
+
+  def update_board; end
+
   def knight_moves(position, destination)
     @root_node = Knight.new(position)
     queue = [@root_node]
@@ -67,4 +87,4 @@ class King < Piece; end
 
 board = Board.new
 
-board.knight_moves([3, 3], [4, 3])
+board.make_move([3, 3], [4, 3], 'knight')
