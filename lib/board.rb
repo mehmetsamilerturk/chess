@@ -5,6 +5,7 @@ class Board
   attr_accessor :board, :turn
 
   def initialize
+    # true if white's turn
     @turn = true
     white_en_passant_piece = []
     black_en_passant_piece = []
@@ -43,11 +44,42 @@ class Board
       @board[1][i] = Pawn.new('black')
     end
   end
-
+  
+  # prints the current state
   def print_board
+    buffer = ''
+
+    33.times do |i|
+      buffer += '*'
+    end
+
+    puts buffer
+
+    @board.size.times do |i|
+      tmp_str = '|'
+
+      @board[i].each do |j|
+        if j == nil || j.name == 'GP'
+          tmp_str += "   |"
+        elsif j.name.size == 2
+          tmp_str += (" " + j.to_str + "|")
+        else
+          tmp_str += (" " + j.to_str + " |")
+        end
+      end
+      puts tmp_str
+    end
+
+    buffer = ''
+
+    33.times do |i|
+      buffer += '*'
+    end
+
+    puts buffer
   end
 end
 
 board = Board.new
 
-p board.board[0]
+board.print_board
