@@ -9,14 +9,17 @@ class Piece
     false
   end
 
-  def is_white?; end
+  def is_white?
+    # true if white's turn
+    @color
+  end
 
   # Return a string to represent the piece
   def to_str
     if @color
       return @name
     else
-      return '\033[94m' + @name + '\033[0m'
+      return "\033[94m" + @name + "\033[0m"
     end
   end
 end
@@ -70,15 +73,6 @@ class Pawn < Piece
   def initialize(color)
     @color = color
     @name = 'P'
-  end
-
-  def is_valid?(board, start, to); end
-end
-
-class PawnEnPassant < Piece
-  def initialize(color)
-    @color = color
-    @name = 'PEP'
   end
 
   def is_valid?(board, start, to); end

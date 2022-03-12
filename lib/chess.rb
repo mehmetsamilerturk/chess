@@ -13,4 +13,7 @@ class Chess
   # moving a piece to its destination
   def move
   end
+
+  def play
+  end
 end
