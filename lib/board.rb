@@ -54,7 +54,7 @@ class Board
 
     puts buffer
 
-    row_number = 8
+    row_number = 7
 
     @board.size.times do |i|
       tmp_str = '|'
@@ -81,12 +81,17 @@ class Board
     end
 
     puts buffer
-    puts '   a   b   c   d   e   f   g   h'.yellow
+    puts '   0   1   2   3   4   5   6   7'.yellow
   end
+
+  #def move(from, to)
+
+  #end
 end
 
-board = Board.new
+# board = Board.new
 
-board.print_board
+# board.print_board
 # [7] is row and [3] is column
-p board.board[7][3]
+# p board.board[7][3]
+#board.move()

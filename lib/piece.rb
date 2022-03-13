@@ -1,12 +1,11 @@
+require_relative 'board'
+require_relative 'color'
+
 # Parent class of all the chess pieces
 class Piece
   attr_reader :color, :name
 
   def initialize
-  end
-
-  def is_valid?
-    false
   end
 
   def is_white?
@@ -30,13 +29,15 @@ class Rook < Piece
     @name = 'R'
   end
 
-  def is_valid?(board, start, to); end
+  def is_valid?(board, start, to)
+
+  end
 end
 
 class Knight < Piece
   def initialize(color)
     @color = color
-    @name = 'K'
+    @name = 'N'
   end
 
   def is_valid?(board, start, to); end
