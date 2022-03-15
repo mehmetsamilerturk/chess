@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'board'
 require_relative 'piece'
 require_relative 'color'
@@ -11,31 +13,28 @@ class Chess
   end
 
   # promotes a Pawn that has reached the end of the board
-  def promotion
-  end
+  def promotion; end
 
   # moving a piece to its destination
   def move
     puts ''
     rboard.print_board
     from, to = ask_move
-    
+
     # raise "no move" if ...
     p [from, to]
   end
 
-  def play
-  end
+  def play; end
 
   def ask_move
     puts
     puts 'Your move should be in this format: 34'
     puts '3 is row and 4 is column'
-    input = ''
-    
+
     print 'Enter the location of your piece> '
     location = gets.chomp
-    
+
     print 'Enter the destination> '
     destination = gets.chomp
 

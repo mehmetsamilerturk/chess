@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'piece'
 require_relative 'color'
 
@@ -7,9 +9,59 @@ class Board
 
   def initialize
     # true if white's turn
-    @turn = true
-    @board = []
+    # @turn = true
+    @board = fill_board
+  end
 
+  # prints the current state
+  def print_board
+    buffer = ''
+    print ' '
+    33.times do |_i|
+      buffer += '*'
+    end
+
+    puts buffer
+
+    row_number = 7
+
+    @board.size.times do |i|
+      tmp_str = '|'
+
+      print row_number
+      row_number -= 1
+
+      @board[i].each do |j|
+        tmp_str += if j.nil? || j.name == 'PEP' # Ghost Pawn
+                     '   |'
+                   elsif j.name.size == 2
+                     " #{j.to_str}|"
+                   else
+                     " #{j.to_str} |"
+                   end
+      end
+      puts tmp_str
+    end
+
+    buffer = ''
+    print ' '
+    33.times do |_i|
+      buffer += '*'
+    end
+
+    puts buffer
+    puts '   0   1   2   3   4   5   6   7'.yellow
+  end
+
+  def move(from, to)
+    @board[to[0].to_i][to[1].to_i] = @board[from[0].to_i][from[1].to_i]
+    @board[from[0].to_i][from[1].to_i] = nil
+  end
+
+  private
+
+  def fill_board
+    @board = []
     # full board
     8.times do |_i|
       @board.push([nil] * 8)
@@ -42,56 +94,15 @@ class Board
     8.times do |i|
       @board[1][i] = Pawn.new(false)
     end
+
+    @board
   end
-  
-  # prints the current state
-  def print_board
-    buffer = ''
-    print ' '
-    33.times do |i|
-      buffer += '*'
-    end
-
-    puts buffer
-
-    row_number = 7
-
-    @board.size.times do |i|
-      tmp_str = '|'
-    
-      print row_number
-      row_number -= 1
-
-      @board[i].each do |j|
-        if j == nil || j.name == 'PEP' # Ghost Pawn
-          tmp_str += "   |"
-        elsif j.name.size == 2
-          tmp_str += (" " + j.to_str + "|")
-        else
-          tmp_str += (" " + j.to_str + " |")
-        end
-      end
-      puts tmp_str
-    end
-
-    buffer = ''
-    print ' '
-    33.times do |i|
-      buffer += '*'
-    end
-
-    puts buffer
-    puts '   0   1   2   3   4   5   6   7'.yellow
-  end
-
-  #def move(from, to)
-
-  #end
 end
 
-# board = Board.new
+board = Board.new
 
-# board.print_board
+board.print_board
 # [7] is row and [3] is column
 # p board.board[7][3]
-#board.move()
+board.move('10', '20')
+board.print_board

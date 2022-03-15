@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'board'
 require_relative 'color'
 
@@ -5,10 +7,9 @@ require_relative 'color'
 class Piece
   attr_reader :color, :name
 
-  def initialize
-  end
+  def initialize; end
 
-  def is_white?
+  def white?
     # true if white's turn
     @color
   end
@@ -16,65 +17,69 @@ class Piece
   # Return a string to represent the piece
   def to_str
     if @color
-      return @name
+      @name
     else
-      return "\033[94m" + @name + "\033[0m"
+      "\e[94m#{@name}\e[0m"
     end
   end
 end
 
 class Rook < Piece
   def initialize(color)
+    super()
     @color = color
     @name = 'R'
   end
 
-  def is_valid?(board, start, to)
-
-  end
+  def valid?(board, start, to); end
 end
 
 class Knight < Piece
   def initialize(color)
+    super()
     @color = color
     @name = 'N'
   end
 
-  def is_valid?(board, start, to); end
+  def valid?(board, start, to); end
 end
 
 class Bishop < Piece
   def initialize(color)
+    super()
     @color = color
     @name = 'B'
   end
 
-  def is_valid?(board, start, to); end
+  def valid?(board, start, to); end
 end
 
 class Queen < Piece
   def initialize(color)
+    super()
     @color = color
     @name = 'Q'
   end
 
-  def is_valid?(board, start, to); end
+  def valid?(board, start, to); end
 end
 
-class King < Piece 
+class King < Piece
   def initialize(color)
+    super()
     @color = color
     @name = 'K'
   end
 
-  def is_valid?(board, start, to); end
+  def valid?(board, start, to); end
 end
 
 class Pawn < Piece
   def initialize(color)
+    super()
     @color = color
     @name = 'P'
   end
 
-  def is_valid?(board, start, to); end
+  def valid?(board, start, to); end
 end
