@@ -31,7 +31,9 @@ class Rook < Piece
     @name = 'R'
   end
 
-  def valid?(board, start, to); end
+  def valid?(_board, start, to)
+    to[0] == start[0] || to[1] == start[1]
+  end
 end
 
 class Knight < Piece
@@ -41,7 +43,10 @@ class Knight < Piece
     @name = 'N'
   end
 
-  def valid?(board, start, to); end
+  def valid?(_board, start, to)
+    ((to[1] - start[1]).abs == 1 && (to[0] - start[0]).abs == 2) ||
+      ((to[1] - start[1]).abs == 2 && (to[0] - start[0]).abs == 1)
+  end
 end
 
 class Bishop < Piece
@@ -51,7 +56,9 @@ class Bishop < Piece
     @name = 'B'
   end
 
-  def valid?(board, start, to); end
+  def valid?(_board, start, to)
+    (to[1] - start[1]).abs == (to[0] - start[0]).abs
+  end
 end
 
 class Queen < Piece
@@ -61,7 +68,9 @@ class Queen < Piece
     @name = 'Q'
   end
 
-  def valid?(board, start, to); end
+  def valid?(_board, start, to)
+    ((to[0] - start[0]).abs == (to[1] - start[1]).abs) || (to[0] == start[0] || to[1] == start[1])
+  end
 end
 
 class King < Piece
@@ -72,7 +81,7 @@ class King < Piece
   end
 
   def valid?(_board, start, to)
-    to[0].to_i - start[0].to_i <= 1 && to[1].to_i - start[1].to_i <= 1
+    (to[1] - start[1]).abs <= 1 && (to[0] - start[0]).abs <= 1
   end
 end
 
@@ -83,5 +92,7 @@ class Pawn < Piece
     @name = 'P'
   end
 
-  def valid?(board, start, to); end
+  def valid?(_board, start, to)
+    to[1] == start[1] && (to[0] - start[0]).abs == 1
+  end
 end

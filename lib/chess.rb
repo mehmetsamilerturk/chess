@@ -20,11 +20,17 @@ class Chess
     puts ''
     rboard.print_board
     from, to = ask_move
+    piece = rboard.board[from[0]][from[1]]
 
     # raise "no move" if ...
-    #p [from, to]
-    p rboard.board[from[0]][from[1]]
 
+    if piece.valid?(rboard.board, from, to)
+      rboard.move(from, to)
+    else
+      puts 'INVALID MOVE'.red
+    end
+
+    rboard.print_board
   end
 
   def play; end
@@ -44,14 +50,13 @@ class Chess
   end
 end
 
- board = Board.new
-
- # [7] is row and [3] is column
- # p board.board[7][3]
-
- # board.print_board
- # board.move([6, 2], [5, 2])
- # board.print_board
+# board = Board.new
+# p board.board[7][4].valid?(board.board, [7, 4], [4, 4])
+# [7] is row and [3] is column
+# p board.board[7][3]
+# board.print_board
+# board.move([6, 2], [5, 2])
+# board.print_board
 
 game = Chess.new
 
