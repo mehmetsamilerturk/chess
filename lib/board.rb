@@ -9,7 +9,7 @@ class Board
 
   def initialize
     # true if white's turn
-    # @turn = true
+    @turn = true
     @board = fill_board
   end
 

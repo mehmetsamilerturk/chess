@@ -18,22 +18,54 @@ class Chess
   # moving a piece to its destination
   def move
     puts ''
+    puts rboard.turn ? 'White\'s turn' : 'Black\'s turn'.blue
+     
     rboard.print_board
     from, to = ask_move
     piece = rboard.board[from[0]][from[1]]
 
     # raise "no move" if ...
+    if rboard.turn
+      until piece.white?
+        puts
+        rboard.print_board
+        puts
+        puts 'WARNING'.red + ': White\'s turn!'
+        from, to = ask_move
+        piece = rboard.board[from[0]][from[1]]
+      end
 
-    if piece.valid?(rboard.board, from, to)
-      rboard.move(from, to)
+      if piece.valid?(rboard.board, from, to)
+        rboard.move(from, to)
+        rboard.turn = false
+      else
+        puts 'INVALID MOVE'.red
+      end
     else
-      puts 'INVALID MOVE'.red
-    end
+      while piece.white?
+        puts
+        rboard.print_board
+        puts
+        puts 'WARNING'.red + ': Black\'s turn!'
+        from, to = ask_move
+        piece = rboard.board[from[0]][from[1]]
+      end
 
-    rboard.print_board
+      if piece.valid?(rboard.board, from, to)
+        rboard.move(from, to)
+        rboard.turn = true
+      else
+        puts 'INVALID MOVE'.red
+      end
+    end
   end
 
-  def play; end
+  # game loop
+  def play
+    loop do
+      move
+    end
+  end
 
   def ask_move
     puts
@@ -60,4 +92,4 @@ end
 
 game = Chess.new
 
-game.move
+game.play
