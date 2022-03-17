@@ -71,7 +71,9 @@ class King < Piece
     @name = 'K'
   end
 
-  def valid?(board, start, to); end
+  def valid?(_board, start, to)
+    to[0].to_i - start[0].to_i <= 1 && to[1].to_i - start[1].to_i <= 1
+  end
 end
 
 class Pawn < Piece

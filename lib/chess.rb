@@ -22,7 +22,9 @@ class Chess
     from, to = ask_move
 
     # raise "no move" if ...
-    p [from, to]
+    #p [from, to]
+    p rboard.board[from[0]][from[1]]
+
   end
 
   def play; end
@@ -41,6 +43,15 @@ class Chess
     [[location[0].to_i, location[1].to_i], [destination[0].to_i, destination[1].to_i]]
   end
 end
+
+ board = Board.new
+
+ # [7] is row and [3] is column
+ # p board.board[7][3]
+
+ # board.print_board
+ # board.move([6, 2], [5, 2])
+ # board.print_board
 
 game = Chess.new
 

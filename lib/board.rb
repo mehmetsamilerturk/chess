@@ -23,13 +23,13 @@ class Board
 
     puts buffer
 
-    row_number = 7
+    row_number = 0
 
     @board.size.times do |i|
       tmp_str = '|'
 
       print row_number
-      row_number -= 1
+      row_number += 1
 
       @board[i].each do |j|
         tmp_str += if j.nil? || j.name == 'PEP' # Ghost Pawn
@@ -53,9 +53,10 @@ class Board
     puts '   0   1   2   3   4   5   6   7'.yellow
   end
 
+  # Takes 2 digit numbers as arrays: move([1, 0], [2, 0])
   def move(from, to)
-    @board[to[0].to_i][to[1].to_i] = @board[from[0].to_i][from[1].to_i]
-    @board[from[0].to_i][from[1].to_i] = nil
+    @board[to[0]][to[1]] = @board[from[0]][from[1]]
+    @board[from[0]][from[1]] = nil
   end
 
   private
@@ -98,11 +99,3 @@ class Board
     @board
   end
 end
-
-board = Board.new
-
-board.print_board
-# [7] is row and [3] is column
-# p board.board[7][3]
-board.move('10', '20')
-board.print_board
