@@ -35,7 +35,7 @@ class Chess
         piece = rboard.board[from[0]][from[1]]
       end
 
-      if piece.valid?(rboard.board, from, to)
+      if piece.valid?(rboard, from, to)
         rboard.move(from, to)
         rboard.turn = false
       else
@@ -51,7 +51,7 @@ class Chess
         piece = rboard.board[from[0]][from[1]]
       end
 
-      if piece.valid?(rboard.board, from, to)
+      if piece.valid?(rboard, from, to)
         rboard.move(from, to)
         rboard.turn = true
       else

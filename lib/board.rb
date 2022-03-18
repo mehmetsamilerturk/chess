@@ -5,12 +5,14 @@ require_relative 'color'
 
 # Configuration of the board
 class Board
-  attr_accessor :board, :turn
+  attr_accessor :board, :turn, :captured_pieces
 
   def initialize
     # true if white's turn
     @turn = true
     @board = fill_board
+    # first subarray contains captured white pieces and other captured black pieces
+    @captured_pieces = [[], []]
   end
 
   # prints the current state
@@ -40,6 +42,7 @@ class Board
                      " #{j.to_str} |"
                    end
       end
+
       puts tmp_str
     end
 
@@ -51,6 +54,21 @@ class Board
 
     puts buffer
     puts '   0   1   2   3   4   5   6   7'.yellow
+
+    captured_white_pieces = []
+    captured_black_pieces = []
+
+    captured_pieces.each do |arr|
+      arr.each do |piece|
+        piece.white? ? captured_white_pieces << piece.to_str : captured_black_pieces << piece.to_str
+      end
+    end
+
+    print 'Captured white pieces: '
+    captured_white_pieces.each { |pic| print pic }
+    print "\nCaptured black pieces: "
+    captured_black_pieces.each { |pic| print pic }
+    puts
   end
 
   # Takes 2 digit numbers as arrays: move([1, 0], [2, 0])
