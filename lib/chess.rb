@@ -19,7 +19,7 @@ class Chess
   def move
     puts ''
     puts rboard.turn ? 'White\'s turn' : 'Black\'s turn'.blue
-     
+
     rboard.print_board
     from, to = ask_move
     piece = rboard.board[from[0]][from[1]]
@@ -30,7 +30,7 @@ class Chess
         puts
         rboard.print_board
         puts
-        puts 'WARNING'.red + ': White\'s turn!'
+        puts "#{'WARNING'.red}: White's turn!"
         from, to = ask_move
         piece = rboard.board[from[0]][from[1]]
       end
@@ -46,7 +46,7 @@ class Chess
         puts
         rboard.print_board
         puts
-        puts 'WARNING'.red + ': Black\'s turn!'
+        puts "#{'WARNING'.red}: Black's turn!"
         from, to = ask_move
         piece = rboard.board[from[0]][from[1]]
       end

@@ -14,6 +14,15 @@ class Piece
     @color
   end
 
+  def valid?(board, _start, to)
+    # If there is no piece in target location
+    if board[to[0]][to[1]].nil?
+      true
+    else
+      false
+    end
+  end
+
   # Return a string to represent the piece
   def to_str
     if @color
@@ -31,8 +40,12 @@ class Rook < Piece
     @name = 'R'
   end
 
-  def valid?(_board, start, to)
-    to[0] == start[0] || to[1] == start[1]
+  def valid?(board, start, to)
+    if to[0] == start[0] || to[1] == start[1]
+      super(board, start, to)
+    else
+      false
+    end
   end
 end
 
@@ -43,9 +56,13 @@ class Knight < Piece
     @name = 'N'
   end
 
-  def valid?(_board, start, to)
-    ((to[1] - start[1]).abs == 1 && (to[0] - start[0]).abs == 2) ||
-      ((to[1] - start[1]).abs == 2 && (to[0] - start[0]).abs == 1)
+  def valid?(board, start, to)
+    if ((to[1] - start[1]).abs == 1 && (to[0] - start[0]).abs == 2) ||
+       ((to[1] - start[1]).abs == 2 && (to[0] - start[0]).abs == 1)
+      super(board, start, to)
+    else
+      false
+    end
   end
 end
 
@@ -56,8 +73,12 @@ class Bishop < Piece
     @name = 'B'
   end
 
-  def valid?(_board, start, to)
-    (to[1] - start[1]).abs == (to[0] - start[0]).abs
+  def valid?(board, start, to)
+    if (to[1] - start[1]).abs == (to[0] - start[0]).abs
+      super(board, start, to)
+    else
+      false
+    end
   end
 end
 
@@ -68,8 +89,12 @@ class Queen < Piece
     @name = 'Q'
   end
 
-  def valid?(_board, start, to)
-    ((to[0] - start[0]).abs == (to[1] - start[1]).abs) || (to[0] == start[0] || to[1] == start[1])
+  def valid?(board, start, to)
+    if ((to[0] - start[0]).abs == (to[1] - start[1]).abs) || (to[0] == start[0] || to[1] == start[1])
+      super(board, start, to)
+    else
+      false
+    end
   end
 end
 
@@ -80,8 +105,12 @@ class King < Piece
     @name = 'K'
   end
 
-  def valid?(_board, start, to)
-    (to[1] - start[1]).abs <= 1 && (to[0] - start[0]).abs <= 1
+  def valid?(board, start, to)
+    if (to[1] - start[1]).abs <= 1 && (to[0] - start[0]).abs <= 1
+      super(board, start, to)
+    else
+      false
+    end
   end
 end
 
@@ -92,7 +121,11 @@ class Pawn < Piece
     @name = 'P'
   end
 
-  def valid?(_board, start, to)
-    to[1] == start[1] && (to[0] - start[0]).abs == 1
+  def valid?(board, start, to)
+    if to[1] == start[1] && (to[0] - start[0]).abs == 1
+      super(board, start, to)
+    else
+      false
+    end
   end
 end
