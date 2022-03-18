@@ -3,6 +3,34 @@
 require_relative 'board'
 require_relative 'color'
 
+def check_pawn_captures(board, start, to)
+  board = board.board
+  pawn = board[start[0]][start[1]]
+  if pawn.white?
+    if !board[start[0] - 1][start[1] + 1].nil? && !board[start[0] - 1][start[1] - 1].nil?
+      (to[1] == start[1] && (to[0] - start[0]).abs == 1) ||
+        ((to[0] == start[0] - 1 && to[1] == start[1] + 1) || (to[0] == start[0] - 1 && to[1] == start[1] - 1))
+    elsif !board[start[0] - 1][start[1] + 1].nil?
+      (to[1] == start[1] && (to[0] - start[0]).abs == 1) ||
+        (to[0] == start[0] - 1 && to[1] == start[1] + 1)
+    elsif !board[start[0] - 1][start[1] - 1].nil?
+      (to[1] == start[1] && (to[0] - start[0]).abs == 1) ||
+        (to[0] == start[0] - 1 && to[1] == start[1] - 1)
+    end
+  elsif !board[start[0] + 1][start[1] - 1].nil? && !board[start[0] + 1][start[1] + 1].nil?
+    (to[1] == start[1] && (to[0] - start[0]).abs == 1) ||
+      ((to[0] == start[0] + 1 && to[1] == start[1] - 1) || (to[0] == start[0] + 1 && to[1] == start[1] + 1))
+  elsif !board[start[0] + 1][start[1] - 1].nil?
+    (to[1] == start[1] && (to[0] - start[0]).abs == 1) ||
+      (to[0] == start[0] + 1 && to[1] == start[1] - 1)
+  elsif !board[start[0] + 1][start[1] + 1].nil?
+    (to[1] == start[1] && (to[0] - start[0]).abs == 1) ||
+      (to[0] == start[0] + 1 && to[1] == start[1] + 1)
+  end
+  # board[start[0] - 1][start[1] + 1].nil? && board[start[0] - 1][start[1] - 1].nil? # white
+  # board[start[0] + 1][start[1] - 1] && board[start[0] + 1][start[1] + 1] # black
+end
+
 # Parent class of all the chess pieces
 class Piece
   attr_reader :color, :name
@@ -21,6 +49,13 @@ class Piece
       # If there is no piece in target location
       if target.nil?
         true
+      elsif piece.name == 'P'
+        if check_pawn_captures(board, start, to)
+          puts 'inside'
+          target.white? ? board.captured_pieces[0] << target : board.captured_pieces[1] << target
+        else
+          false
+        end
       elsif piece.white?
         target.white? ? false : board.captured_pieces[1] << target
       else
@@ -131,16 +166,23 @@ class Pawn < Piece
   end
 
   def valid?(board, start, to)
-    if to[1] == start[1] && (to[0] - start[0]).abs == 1
-      # Restrict pawns from going backwards
+    if check_pawn_captures(board, start, to)
+      puts 'inside pawn'
+      true
+    elsif to[1] == start[1] && (to[0] - start[0]).abs == 1
       if @color == true
         return false if start[0] < to[0]
       elsif start[0] > to[0]
         return false
       end
-      super(board, start, to)
+      # Restrict pawns from going backwards
     else
       false
     end
+
+    super(board, start, to)
   end
 end
+
+# for white capturing
+# board[start[0] - 1][start[1] + 1].nil? && board[start[0] - 1][start[1] - 1].nil?
