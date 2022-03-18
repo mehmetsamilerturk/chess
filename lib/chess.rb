@@ -39,7 +39,7 @@ class Chess
         rboard.move(from, to)
         rboard.turn = false
       else
-        puts 'INVALID MOVE'.red
+        puts 'INVALID MOVE!'.red
       end
     else
       while piece.white?

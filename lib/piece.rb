@@ -132,6 +132,12 @@ class Pawn < Piece
 
   def valid?(board, start, to)
     if to[1] == start[1] && (to[0] - start[0]).abs == 1
+      # Restrict pawns from going backwards
+      if @color == true
+        return false if start[0] < to[0]
+      elsif start[0] > to[0]
+        return false
+      end
       super(board, start, to)
     else
       false
