@@ -15,15 +15,20 @@ class Piece
   end
 
   def valid?(board, start, to)
-    piece = board.board[start[0]][start[1]]
-    target = board.board[to[0]][to[1]]
-    # If there is no piece in target location
-    if target.nil?
-      true
-    elsif piece.white?
-      target.white? ? false : board.captured_pieces[1] << target
+    if (start[0].between?(0, 7) && start[1].between?(0, 7)) && to[0].between?(0, 7) && to[1].between?(0, 7)
+      piece = board.board[start[0]][start[1]]
+      target = board.board[to[0]][to[1]]
+      # If there is no piece in target location
+      if target.nil?
+        true
+      elsif piece.white?
+        target.white? ? false : board.captured_pieces[1] << target
+      else
+        target.white? ? board.captured_pieces[0] << target : false
+      end
     else
-      target.white? ? board.captured_pieces[0] << target : false
+      puts 'INVALID LOCATION'.red
+      false
     end
   end
 
