@@ -3,6 +3,33 @@
 require_relative 'board'
 require_relative 'color'
 
+def check_pawn_backwards(board, start, to)
+  pawn = board.board[start[0]][start[1]]
+  if pawn.white?
+    return false if start[0] < to[0]
+  elsif start[0] > to[0]
+    return false
+  end
+  true
+end
+
+def check_en_passant(board, start, _to)
+  pawn_en = board.board[start[0]][start[1]]
+
+  case start[0]
+  when 6
+    if pawn_en.white?
+      true
+    else
+      false
+    end
+  when 1
+    return true unless pawn_en.white?
+
+    false
+  end
+end
+
 def check_pawn_captures(board, start, to)
   board = board.board
   pawn = board[start[0]][start[1]]
@@ -27,8 +54,6 @@ def check_pawn_captures(board, start, to)
     (to[1] == start[1] && (to[0] - start[0]).abs == 1) ||
       (to[0] == start[0] + 1 && to[1] == start[1] + 1)
   end
-  # board[start[0] - 1][start[1] + 1].nil? && board[start[0] - 1][start[1] - 1].nil? # white
-  # board[start[0] + 1][start[1] - 1] && board[start[0] + 1][start[1] + 1] # black
 end
 
 # Parent class of all the chess pieces
@@ -50,17 +75,13 @@ class Piece
       if target.nil?
         true
       elsif piece.name == 'P'
-        if check_pawn_captures(board, start, to)
-          puts 'inside'
-          target.white? ? board.captured_pieces[0] << target : board.captured_pieces[1] << target
-        else
-          false
-        end
+        true
       elsif piece.white?
         target.white? ? false : board.captured_pieces[1] << target
       else
         target.white? ? board.captured_pieces[0] << target : false
       end
+      true
     else
       puts 'INVALID LOCATION'.red
       false
@@ -166,23 +187,55 @@ class Pawn < Piece
   end
 
   def valid?(board, start, to)
-    if check_pawn_captures(board, start, to)
-      puts 'inside pawn'
-      true
-    elsif to[1] == start[1] && (to[0] - start[0]).abs == 1
-      if @color == true
-        return false if start[0] < to[0]
-      elsif start[0] > to[0]
-        return false
+    pawn_en = board.board[start[0]][start[1]]
+    target = board.board[to[0]][to[1]]
+
+    return false unless check_pawn_backwards(board, start, to)
+    return false unless super(board, start, to)
+
+    if pawn_en.white? && !target.nil?
+      return false if target.white?
+    elsif pawn_en.white? && !target.nil?
+      return false unless target.white?
+    end
+
+    if check_en_passant(board, start, to)
+      if check_pawn_captures(board, start, to)
+        return target.white? ? board.captured_pieces[0] << target : board.captured_pieces[1] << target
       end
-      # Restrict pawns from going backwards
+
+      if pawn_en.white?
+        (to[1] == start[1] && to[0] == start[0] - 2) ||
+          (to[1] == start[1] && (to[0] - start[0]).abs == 1)
+      else
+        (to[1] == start[1] && to[0] == start[0] + 2) ||
+          (to[1] == start[1] && (to[0] - start[0]).abs == 1)
+      end
+    elsif check_pawn_captures(board, start, to)
+      target.white? ? board.captured_pieces[0] << target : board.captured_pieces[1] << target
+    elsif to[1] == start[1] && (to[0] - start[0]).abs == 1
+      true
     else
       false
     end
-
-    super(board, start, to)
   end
 end
 
+# if check_pawn_captures(board, start, to)
+#  target.white? ? board.captured_pieces[0] << target : board.captured_pieces[1] << target
+# else
+#  false
+# end
+#   if start[0] == 6
+#     if pawn_en.white?
+#       (to[1] == start[1] && to[0] == start[0] + 2) ||
+#         (to[1] == start[1] && (to[0] - start[0]).abs == 1)
+#     end
+#   elsif start[0] == 1
+#     unless pawn_en.white?
+#       (to[1] == start[1] && to[0] == start[0] - 2) ||
+#         (to[1] == start[1] && (to[0] - start[0]).abs == 1)
+#     end
+#   end
 # for white capturing
 # board[start[0] - 1][start[1] + 1].nil? && board[start[0] - 1][start[1] - 1].nil?
