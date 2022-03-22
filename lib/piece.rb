@@ -3,6 +3,23 @@
 require_relative 'board'
 require_relative 'color'
 
+# contains possible capture moves and normal pawn moves too
+def pawn_capture_moves(board, start, to); end
+
+# contains possible en-passant and normal pawn moves too
+def en_passant_moves(board, start, to)
+  pawn_en = board.board[start[0]][start[1]]
+  # target = board.board[to[0]][to[1]]
+
+  if pawn_en.white?
+    (to[1] == start[1] && to[0] == start[0] - 2) ||
+      (to[1] == start[1] && (to[0] - start[0]).abs == 1)
+  else
+    (to[1] == start[1] && to[0] == start[0] + 2) ||
+      (to[1] == start[1] && (to[0] - start[0]).abs == 1)
+  end
+end
+
 def check_pawn_backwards(board, start, to)
   pawn = board.board[start[0]][start[1]]
   if pawn.white?
@@ -30,6 +47,7 @@ def check_en_passant(board, start, _to)
   end
 end
 
+# check to see if there is nearby possible capture
 def check_pawn_captures(board, start, to)
   board = board.board
   pawn = board[start[0]][start[1]]
@@ -195,24 +213,18 @@ class Pawn < Piece
 
     if pawn_en.white? && !target.nil?
       return false if target.white?
-    elsif pawn_en.white? && !target.nil?
+    elsif !pawn_en.white? && !target.nil?
       return false unless target.white?
     end
 
     if check_en_passant(board, start, to)
       if check_pawn_captures(board, start, to)
-        return target.white? ? board.captured_pieces[0] << target : board.captured_pieces[1] << target
+        # return target.white? ? board.captured_pieces[0] << target : board.captured_pieces[1] << target
       end
 
-      if pawn_en.white?
-        (to[1] == start[1] && to[0] == start[0] - 2) ||
-          (to[1] == start[1] && (to[0] - start[0]).abs == 1)
-      else
-        (to[1] == start[1] && to[0] == start[0] + 2) ||
-          (to[1] == start[1] && (to[0] - start[0]).abs == 1)
-      end
+      en_passant_moves(board, start, to)
     elsif check_pawn_captures(board, start, to)
-      target.white? ? board.captured_pieces[0] << target : board.captured_pieces[1] << target
+      # target.white? ? board.captured_pieces[0] << target : board.captured_pieces[1] << target
     elsif to[1] == start[1] && (to[0] - start[0]).abs == 1
       true
     else
