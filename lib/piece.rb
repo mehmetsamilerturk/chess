@@ -4,7 +4,35 @@ require_relative 'board'
 require_relative 'color'
 
 # contains possible capture moves and normal pawn moves too
-def pawn_capture_moves(board, start, to); end
+def pawn_capture_moves(board, start, to)
+  board = board.board
+  pawn = board[start[0]][start[1]]
+  if pawn.white?
+    if !board[start[0] - 1][start[1] + 1].nil? && !board[start[0] - 1][start[1] - 1].nil?
+      (to[1] == start[1] && (to[0] - start[0]).abs == 1) ||
+        ((to[0] == start[0] - 1 && to[1] == start[1] + 1) || (to[0] == start[0] - 1 && to[1] == start[1] - 1))
+    elsif !board[start[0] - 1][start[1] + 1].nil?
+      (to[1] == start[1] && (to[0] - start[0]).abs == 1) ||
+        (to[0] == start[0] - 1 && to[1] == start[1] + 1)
+    elsif !board[start[0] - 1][start[1] - 1].nil?
+      (to[1] == start[1] && (to[0] - start[0]).abs == 1) ||
+        (to[0] == start[0] - 1 && to[1] == start[1] - 1)
+    else
+      false
+    end
+  elsif !board[start[0] + 1][start[1] - 1].nil? && !board[start[0] + 1][start[1] + 1].nil?
+    (to[1] == start[1] && (to[0] - start[0]).abs == 1) ||
+      ((to[0] == start[0] + 1 && to[1] == start[1] - 1) || (to[0] == start[0] + 1 && to[1] == start[1] + 1))
+  elsif !board[start[0] + 1][start[1] - 1].nil?
+    (to[1] == start[1] && (to[0] - start[0]).abs == 1) ||
+      (to[0] == start[0] + 1 && to[1] == start[1] - 1)
+  elsif !board[start[0] + 1][start[1] + 1].nil?
+    (to[1] == start[1] && (to[0] - start[0]).abs == 1) ||
+      (to[0] == start[0] + 1 && to[1] == start[1] + 1)
+  else
+    false
+  end
+end
 
 # contains possible en-passant and normal pawn moves too
 def en_passant_moves(board, start, to)
@@ -48,29 +76,27 @@ def check_en_passant(board, start, _to)
 end
 
 # check to see if there is nearby possible capture
-def check_pawn_captures(board, start, to)
+def check_pawn_captures(board, start, _to)
   board = board.board
   pawn = board[start[0]][start[1]]
   if pawn.white?
     if !board[start[0] - 1][start[1] + 1].nil? && !board[start[0] - 1][start[1] - 1].nil?
-      (to[1] == start[1] && (to[0] - start[0]).abs == 1) ||
-        ((to[0] == start[0] - 1 && to[1] == start[1] + 1) || (to[0] == start[0] - 1 && to[1] == start[1] - 1))
+      true
     elsif !board[start[0] - 1][start[1] + 1].nil?
-      (to[1] == start[1] && (to[0] - start[0]).abs == 1) ||
-        (to[0] == start[0] - 1 && to[1] == start[1] + 1)
+      true
     elsif !board[start[0] - 1][start[1] - 1].nil?
-      (to[1] == start[1] && (to[0] - start[0]).abs == 1) ||
-        (to[0] == start[0] - 1 && to[1] == start[1] - 1)
+      true
+    else
+      false
     end
   elsif !board[start[0] + 1][start[1] - 1].nil? && !board[start[0] + 1][start[1] + 1].nil?
-    (to[1] == start[1] && (to[0] - start[0]).abs == 1) ||
-      ((to[0] == start[0] + 1 && to[1] == start[1] - 1) || (to[0] == start[0] + 1 && to[1] == start[1] + 1))
+    true
   elsif !board[start[0] + 1][start[1] - 1].nil?
-    (to[1] == start[1] && (to[0] - start[0]).abs == 1) ||
-      (to[0] == start[0] + 1 && to[1] == start[1] - 1)
+    true
   elsif !board[start[0] + 1][start[1] + 1].nil?
-    (to[1] == start[1] && (to[0] - start[0]).abs == 1) ||
-      (to[0] == start[0] + 1 && to[1] == start[1] + 1)
+    true
+  else
+    false
   end
 end
 
@@ -89,17 +115,22 @@ class Piece
     if (start[0].between?(0, 7) && start[1].between?(0, 7)) && to[0].between?(0, 7) && to[1].between?(0, 7)
       piece = board.board[start[0]][start[1]]
       target = board.board[to[0]][to[1]]
-      # If there is no piece in target location
+
       if target.nil?
         true
       elsif piece.name == 'P'
-        true
+        return false if to[1] == start[1]
+
+        if piece.white?
+          target.white? ? false : board.captured_pieces[1] << target
+        else
+          target.white? ? board.captured_pieces[0] << target : false
+        end
       elsif piece.white?
         target.white? ? false : board.captured_pieces[1] << target
       else
         target.white? ? board.captured_pieces[0] << target : false
       end
-      true
     else
       puts 'INVALID LOCATION'.red
       false
@@ -219,12 +250,12 @@ class Pawn < Piece
 
     if check_en_passant(board, start, to)
       if check_pawn_captures(board, start, to)
-        # return target.white? ? board.captured_pieces[0] << target : board.captured_pieces[1] << target
+        return en_passant_moves(board, start, to) || pawn_capture_moves(board, start, to)
       end
 
       en_passant_moves(board, start, to)
     elsif check_pawn_captures(board, start, to)
-      # target.white? ? board.captured_pieces[0] << target : board.captured_pieces[1] << target
+      pawn_capture_moves(board, start, to)
     elsif to[1] == start[1] && (to[0] - start[0]).abs == 1
       true
     else
@@ -232,22 +263,3 @@ class Pawn < Piece
     end
   end
 end
-
-# if check_pawn_captures(board, start, to)
-#  target.white? ? board.captured_pieces[0] << target : board.captured_pieces[1] << target
-# else
-#  false
-# end
-#   if start[0] == 6
-#     if pawn_en.white?
-#       (to[1] == start[1] && to[0] == start[0] + 2) ||
-#         (to[1] == start[1] && (to[0] - start[0]).abs == 1)
-#     end
-#   elsif start[0] == 1
-#     unless pawn_en.white?
-#       (to[1] == start[1] && to[0] == start[0] - 2) ||
-#         (to[1] == start[1] && (to[0] - start[0]).abs == 1)
-#     end
-#   end
-# for white capturing
-# board[start[0] - 1][start[1] + 1].nil? && board[start[0] - 1][start[1] - 1].nil?
