@@ -1,140 +1,20 @@
 # frozen_string_literal: true
 
-require_relative 'board'
+require_relative 'movable'
 require_relative 'color'
-
-# contains possible capture moves and normal pawn moves too
-def pawn_capture_moves(board, start, to)
-  board = board.board
-  pawn = board[start[0]][start[1]]
-  if pawn.white?
-    if !board[start[0] - 1][start[1] + 1].nil? && !board[start[0] - 1][start[1] - 1].nil?
-      (to[1] == start[1] && (to[0] - start[0]).abs == 1) ||
-        ((to[0] == start[0] - 1 && to[1] == start[1] + 1) || (to[0] == start[0] - 1 && to[1] == start[1] - 1))
-    elsif !board[start[0] - 1][start[1] + 1].nil?
-      (to[1] == start[1] && (to[0] - start[0]).abs == 1) ||
-        (to[0] == start[0] - 1 && to[1] == start[1] + 1)
-    elsif !board[start[0] - 1][start[1] - 1].nil?
-      (to[1] == start[1] && (to[0] - start[0]).abs == 1) ||
-        (to[0] == start[0] - 1 && to[1] == start[1] - 1)
-    else
-      false
-    end
-  elsif !board[start[0] + 1][start[1] - 1].nil? && !board[start[0] + 1][start[1] + 1].nil?
-    (to[1] == start[1] && (to[0] - start[0]).abs == 1) ||
-      ((to[0] == start[0] + 1 && to[1] == start[1] - 1) || (to[0] == start[0] + 1 && to[1] == start[1] + 1))
-  elsif !board[start[0] + 1][start[1] - 1].nil?
-    (to[1] == start[1] && (to[0] - start[0]).abs == 1) ||
-      (to[0] == start[0] + 1 && to[1] == start[1] - 1)
-  elsif !board[start[0] + 1][start[1] + 1].nil?
-    (to[1] == start[1] && (to[0] - start[0]).abs == 1) ||
-      (to[0] == start[0] + 1 && to[1] == start[1] + 1)
-  else
-    false
-  end
-end
-
-# contains possible en-passant and normal pawn moves too
-def en_passant_moves(board, start, to)
-  pawn_en = board.board[start[0]][start[1]]
-  # target = board.board[to[0]][to[1]]
-
-  if pawn_en.white?
-    (to[1] == start[1] && to[0] == start[0] - 2) ||
-      (to[1] == start[1] && (to[0] - start[0]).abs == 1)
-  else
-    (to[1] == start[1] && to[0] == start[0] + 2) ||
-      (to[1] == start[1] && (to[0] - start[0]).abs == 1)
-  end
-end
-
-def check_pawn_backwards(board, start, to)
-  pawn = board.board[start[0]][start[1]]
-  if pawn.white?
-    return false if start[0] < to[0]
-  elsif start[0] > to[0]
-    return false
-  end
-  true
-end
-
-def check_en_passant(board, start, _to)
-  pawn_en = board.board[start[0]][start[1]]
-
-  case start[0]
-  when 6
-    if pawn_en.white?
-      true
-    else
-      false
-    end
-  when 1
-    return true unless pawn_en.white?
-
-    false
-  end
-end
-
-# check to see if there is nearby possible capture
-def check_pawn_captures(board, start, _to)
-  board = board.board
-  pawn = board[start[0]][start[1]]
-  if pawn.white?
-    if !board[start[0] - 1][start[1] + 1].nil? && !board[start[0] - 1][start[1] - 1].nil?
-      true
-    elsif !board[start[0] - 1][start[1] + 1].nil?
-      true
-    elsif !board[start[0] - 1][start[1] - 1].nil?
-      true
-    else
-      false
-    end
-  elsif !board[start[0] + 1][start[1] - 1].nil? && !board[start[0] + 1][start[1] + 1].nil?
-    true
-  elsif !board[start[0] + 1][start[1] - 1].nil?
-    true
-  elsif !board[start[0] + 1][start[1] + 1].nil?
-    true
-  else
-    false
-  end
-end
 
 # Parent class of all the chess pieces
 class Piece
+  include Movable
+
   attr_reader :color, :name
+  attr_writer :ghost
 
   def initialize; end
 
   def white?
     # true if white's turn
     @color
-  end
-
-  def valid?(board, start, to)
-    if (start[0].between?(0, 7) && start[1].between?(0, 7)) && to[0].between?(0, 7) && to[1].between?(0, 7)
-      piece = board.board[start[0]][start[1]]
-      target = board.board[to[0]][to[1]]
-
-      if target.nil?
-        true
-      elsif piece.name == 'P'
-        return false if to[1] == start[1]
-
-        if piece.white?
-          target.white? ? false : board.captured_pieces[1] << target
-        else
-          target.white? ? board.captured_pieces[0] << target : false
-        end
-      elsif piece.white?
-        target.white? ? false : board.captured_pieces[1] << target
-      else
-        target.white? ? board.captured_pieces[0] << target : false
-      end
-    else
-      puts 'INVALID LOCATION'.red
-      false
-    end
   end
 
   # Return a string to represent the piece
@@ -154,9 +34,9 @@ class Rook < Piece
     @name = 'R'
   end
 
-  def valid?(board, start, to)
+  def valid?(_board, start, to)
     if to[0] == start[0] || to[1] == start[1]
-      super(board, start, to)
+      true
     else
       false
     end
@@ -170,10 +50,10 @@ class Knight < Piece
     @name = 'N'
   end
 
-  def valid?(board, start, to)
+  def valid?(_board, start, to)
     if ((to[1] - start[1]).abs == 1 && (to[0] - start[0]).abs == 2) ||
        ((to[1] - start[1]).abs == 2 && (to[0] - start[0]).abs == 1)
-      super(board, start, to)
+      true
     else
       false
     end
@@ -187,12 +67,8 @@ class Bishop < Piece
     @name = 'B'
   end
 
-  def valid?(board, start, to)
-    if (to[1] - start[1]).abs == (to[0] - start[0]).abs
-      super(board, start, to)
-    else
-      false
-    end
+  def valid?(_board, start, to)
+    (to[1] - start[1]).abs == (to[0] - start[0]).abs
   end
 end
 
@@ -203,9 +79,9 @@ class Queen < Piece
     @name = 'Q'
   end
 
-  def valid?(board, start, to)
+  def valid?(_board, start, to)
     if ((to[0] - start[0]).abs == (to[1] - start[1]).abs) || (to[0] == start[0] || to[1] == start[1])
-      super(board, start, to)
+      true
     else
       false
     end
@@ -219,9 +95,9 @@ class King < Piece
     @name = 'K'
   end
 
-  def valid?(board, start, to)
+  def valid?(_board, start, to)
     if (to[1] - start[1]).abs <= 1 && (to[0] - start[0]).abs <= 1
-      super(board, start, to)
+      true
     else
       false
     end
@@ -229,10 +105,16 @@ class King < Piece
 end
 
 class Pawn < Piece
-  def initialize(color)
+  def initialize(color, ghost: false)
     super()
     @color = color
     @name = 'P'
+    @ghost = ghost
+  end
+
+  def ghost?
+    # true if ghost
+    @ghost
   end
 
   def valid?(board, start, to)
@@ -240,7 +122,6 @@ class Pawn < Piece
     target = board.board[to[0]][to[1]]
 
     return false unless check_pawn_backwards(board, start, to)
-    return false unless super(board, start, to)
 
     if pawn_en.white? && !target.nil?
       return false if target.white?

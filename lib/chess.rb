@@ -36,8 +36,12 @@ class Chess
       end
 
       if piece.valid?(rboard, from, to)
-        rboard.move(from, to)
-        rboard.turn = false
+        if rboard.valid?(rboard, from, to)
+          rboard.move(from, to)
+          rboard.turn = false
+        else
+          puts 'INVALID MOVE'.red
+        end
       else
         puts 'INVALID MOVE!'.red
       end
@@ -52,8 +56,12 @@ class Chess
       end
 
       if piece.valid?(rboard, from, to)
-        rboard.move(from, to)
-        rboard.turn = true
+        if rboard.valid?(rboard, from, to)
+          rboard.move(from, to)
+          rboard.turn = true
+        else
+          puts 'INVALID MOVE'.red
+        end
       else
         puts 'INVALID MOVE'.red
       end

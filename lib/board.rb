@@ -15,6 +15,32 @@ class Board
     @captured_pieces = [[], []]
   end
 
+  def valid?(board, start, to)
+    if (start[0].between?(0, 7) && start[1].between?(0, 7)) && to[0].between?(0, 7) && to[1].between?(0, 7)
+      piece = board.board[start[0]][start[1]]
+      target = board.board[to[0]][to[1]]
+
+      if target.nil?
+        true
+      elsif piece.name == 'P'
+        return false if to[1] == start[1]
+
+        if piece.white?
+          target.white? ? false : board.captured_pieces[1] << target
+        else
+          target.white? ? board.captured_pieces[0] << target : false
+        end
+      elsif piece.white?
+        target.white? ? false : board.captured_pieces[1] << target
+      else
+        target.white? ? board.captured_pieces[0] << target : false
+      end
+    else
+      puts 'INVALID LOCATION'.red
+      false
+    end
+  end
+
   # prints the current state
   def print_board
     buffer = ''
