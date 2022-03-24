@@ -6,7 +6,7 @@ require_relative 'color'
 
 # State of the game
 class Chess
-  attr_reader :rboard
+  attr_accessor :rboard
 
   def initialize
     @rboard = Board.new

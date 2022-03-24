@@ -16,7 +16,9 @@ class Board
   end
 
   def valid?(board, start, to)
-    if (start[0].between?(0, 7) && start[1].between?(0, 7)) && to[0].between?(0, 7) && to[1].between?(0, 7)
+    if ((start[0].between?(0, 7) && start[1].between?(0, 7)) && to[0].between?(0, 7) && to[1].between?(0, 7)) &&
+       !board.board[start[0]][start[1]].ghost?
+
       piece = board.board[start[0]][start[1]]
       target = board.board[to[0]][to[1]]
 
@@ -60,7 +62,7 @@ class Board
       row_number += 1
 
       @board[i].each do |j|
-        tmp_str += if j.nil? || j.name == 'PEP' # Ghost Pawn
+        tmp_str += if j.nil? || j.ghost? # Ghost Pawn
                      '   |'
                    elsif j.name.size == 2
                      " #{j.to_str}|"
@@ -97,8 +99,29 @@ class Board
     puts
   end
 
+  # check if an en-passant move has been made
+  def determine_en_passant(start, to)
+    piece = @board[start[0]][start[1]]
+
+    if piece.white? && piece.name == 'P' && start[0] == 6
+      to[0] == 4
+    elsif !piece.white? && piece.name == 'P' && start[0] == 1
+      to[0] == 3
+    end
+  end
+
   # Takes 2 digit numbers as arrays: move([1, 0], [2, 0])
   def move(from, to)
+    piece = @board[from[0]][from[1]]
+
+    if determine_en_passant(from, to)
+      if piece.white?
+        @board[from[0] - 1][from[1]] = Pawn.new(true, true)
+      else
+        @board[from[0] + 1][from[1]] = Pawn.new(false, true)
+      end
+    end
+
     @board[to[0]][to[1]] = @board[from[0]][from[1]]
     @board[from[0]][from[1]] = nil
   end

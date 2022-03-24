@@ -10,11 +10,19 @@ class Piece
   attr_reader :color, :name
   attr_writer :ghost
 
-  def initialize; end
+  def initialize(color, ghost: false)
+    @color = color
+    @ghost = ghost
+  end
 
   def white?
     # true if white's turn
     @color
+  end
+
+  def ghost?
+    # true if ghost
+    @ghost
   end
 
   # Return a string to represent the piece
@@ -29,8 +37,7 @@ end
 
 class Rook < Piece
   def initialize(color)
-    super()
-    @color = color
+    super(color)
     @name = 'R'
   end
 
@@ -45,8 +52,7 @@ end
 
 class Knight < Piece
   def initialize(color)
-    super()
-    @color = color
+    super(color)
     @name = 'N'
   end
 
@@ -62,8 +68,7 @@ end
 
 class Bishop < Piece
   def initialize(color)
-    super()
-    @color = color
+    super(color)
     @name = 'B'
   end
 
@@ -74,8 +79,7 @@ end
 
 class Queen < Piece
   def initialize(color)
-    super()
-    @color = color
+    super(color)
     @name = 'Q'
   end
 
@@ -90,8 +94,7 @@ end
 
 class King < Piece
   def initialize(color)
-    super()
-    @color = color
+    super(color)
     @name = 'K'
   end
 
@@ -105,16 +108,10 @@ class King < Piece
 end
 
 class Pawn < Piece
-  def initialize(color, ghost: false)
-    super()
+  def initialize(color, ghost = false)
     @color = color
-    @name = 'P'
     @ghost = ghost
-  end
-
-  def ghost?
-    # true if ghost
-    @ghost
+    @name = 'P'
   end
 
   def valid?(board, start, to)
