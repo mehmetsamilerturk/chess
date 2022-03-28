@@ -7,6 +7,7 @@ require_relative 'color'
 class Piece
   include Movable
 
+  attr_accessor :location
   attr_reader :color, :name
   attr_writer :ghost
 
@@ -108,10 +109,11 @@ class King < Piece
 end
 
 class Pawn < Piece
-  def initialize(color, ghost = false)
+  def initialize(color, ghost = false, location = nil)
     @color = color
     @ghost = ghost
     @name = 'P'
+    @location = location
   end
 
   def valid?(board, start, to)

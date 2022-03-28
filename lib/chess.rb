@@ -39,6 +39,7 @@ class Chess
         if rboard.valid?(rboard, from, to)
           rboard.move(from, to)
           rboard.turn = false
+          clean_ghosts('black')
         else
           puts 'INVALID MOVE'.red
         end
@@ -59,6 +60,7 @@ class Chess
         if rboard.valid?(rboard, from, to)
           rboard.move(from, to)
           rboard.turn = true
+          clean_ghosts('white')
         else
           puts 'INVALID MOVE'.red
         end
@@ -88,6 +90,22 @@ class Chess
 
     [[location[0].to_i, location[1].to_i], [destination[0].to_i, destination[1].to_i]]
   end
+
+  private
+
+  def clean_ghosts(color)
+    @rboard.board.flatten.each do |square|
+      unless square.nil?
+        # clean white ghost pawns
+        if color == 'white'
+          @rboard.board[square.location[0]][square.location[1]] = nil if square.ghost? && square.white?
+        # clean black ghost pawns
+        elsif square.ghost? && !square.white?
+          @rboard.board[square.location[0]][square.location[1]] = nil
+        end
+      end
+    end
+  end
 end
 
 # board = Board.new
@@ -99,5 +117,8 @@ end
 # board.print_board
 
 game = Chess.new
-
 game.play
+
+# game.rboard.board.flatten.each do |square|
+#   p square if square.ghost? unless square.nil?
+# end
