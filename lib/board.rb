@@ -32,12 +32,12 @@ class Board
             if target.white?
               false
             else
-              board.captured_pieces[1] << target
               board.board[target.location[0] + 1][target.location[1]] = nil
+              board.captured_pieces[1] << target
             end
           elsif target.white?
-            board.captured_pieces[0] << target
             board.board[target.location[0] - 1][target.location[1]] = nil
+            board.captured_pieces[0] << target
           else
             false
           end
@@ -82,7 +82,7 @@ class Board
       row_number += 1
 
       @board[i].each do |j|
-        tmp_str += if j.nil? # || j.ghost? # Ghost Pawn
+        tmp_str += if j.nil? || j.ghost? # Ghost Pawn
                      '   |'
                    elsif j.name.size == 2
                      " #{j.to_str}|"
