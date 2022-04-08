@@ -9,21 +9,30 @@ class Piece
 
   attr_accessor :location
   attr_reader :color, :name
-  attr_writer :ghost
+  attr_writer :moved
 
-  def initialize(color, ghost: false)
+  def initialize(color)
     @color = color
-    @ghost = ghost
+    @moved = false
   end
 
-  def white?
-    # true if white's turn
-    @color
+  def incheck?
+    @incheck
   end
 
   def ghost?
     # true if ghost
     @ghost
+  end
+
+  def moved?
+    # true if moved
+    @moved
+  end
+
+  def white?
+    # true if white's turn
+    @color
   end
 
   # Return a string to represent the piece
@@ -94,9 +103,12 @@ class Queen < Piece
 end
 
 class King < Piece
+  attr_writer :incheck
+
   def initialize(color)
     super(color)
     @name = 'K'
+    @incheck = false
   end
 
   def valid?(_board, start, to)
@@ -109,6 +121,8 @@ class King < Piece
 end
 
 class Pawn < Piece
+  attr_writer :ghost
+
   def initialize(color, ghost = false, location = nil)
     @color = color
     @ghost = ghost
