@@ -130,6 +130,32 @@ class Board
     end
   end
 
+  # Gets the name of the promotion piece and promotes the pawn
+  def promote(piece, to)
+    print 'Promote to: '
+
+    @board[to[0]][to[1]] = case gets.chomp.downcase
+                           when 'r'
+                             piece.white? ? Rook.new(true) : Rook.new(false)
+                           when 'n'
+                             piece.white? ? Knight.new(true) : Knight.new(false)
+                           when 'b'
+                             piece.white? ? Bishop.new(true) : Bishop.new(false)
+                           else
+                             piece.white? ? Queen.new(true) : Queen.new(false)
+                           end
+  end
+
+  def determine_promotion(piece, to)
+    if piece.name == 'P'
+      to[0] == if piece.white?
+                 0
+               else
+                 7
+               end
+    end
+  end
+
   # Takes 2 digit numbers as arrays: move([1, 0], [2, 0])
   def move(from, to)
     piece = @board[from[0]][from[1]]
@@ -146,6 +172,8 @@ class Board
 
     @board[to[0]][to[1]] = @board[from[0]][from[1]]
     @board[from[0]][from[1]] = nil
+
+    promote(piece, to) if determine_promotion(piece, to)
   end
 
   private
