@@ -12,9 +12,6 @@ class Chess
     @rboard = Board.new
   end
 
-  # promotes a Pawn that has reached the end of the board
-  def promotion; end
-
   # moving a piece to its destination
   def move
     puts ''
