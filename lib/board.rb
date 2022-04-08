@@ -133,26 +133,26 @@ class Board
   # Gets the name of the promotion piece and promotes the pawn
   def promote(piece, to)
     print 'Promote to: '
-    
-    case gets.chomp.downcase
-    when 'r'
-      piece.white? ? @board[to[0]][to[1]] = Rook.new(true) : @board[to[0]][to[1]] = Rook.new(false)
-    when 'n'
-      piece.white? ? @board[to[0]][to[1]] = Knight.new(true) : @board[to[0]][to[1]] = Knight.new(false)
-    when 'b'
-      piece.white? ? @board[to[0]][to[1]] = Bishop.new(true) : @board[to[0]][to[1]] = Bishop.new(false)
-    else
-      piece.white? ? @board[to[0]][to[1]] = Queen.new(true) : @board[to[0]][to[1]] = Queen.new(false)
-    end
+
+    @board[to[0]][to[1]] = case gets.chomp.downcase
+                           when 'r'
+                             piece.white? ? Rook.new(true) : Rook.new(false)
+                           when 'n'
+                             piece.white? ? Knight.new(true) : Knight.new(false)
+                           when 'b'
+                             piece.white? ? Bishop.new(true) : Bishop.new(false)
+                           else
+                             piece.white? ? Queen.new(true) : Queen.new(false)
+                           end
   end
 
   def determine_promotion(piece, to)
     if piece.name == 'P'
-      if piece.white?
-        to[0] == 0
-      else
-        to[0] == 7
-      end
+      to[0] == if piece.white?
+                 0
+               else
+                 7
+               end
     end
   end
 
