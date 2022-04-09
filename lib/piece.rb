@@ -2,10 +2,12 @@
 
 require_relative 'movable'
 require_relative 'color'
+require_relative 'checkable'
 
 # Parent class of all the chess pieces
 class Piece
   include Movable
+  include Checkable
 
   attr_accessor :location
   attr_reader :color, :name
@@ -14,10 +16,6 @@ class Piece
   def initialize(color)
     @color = color
     @moved = false
-  end
-
-  def incheck?
-    @incheck
   end
 
   def ghost?
@@ -103,12 +101,9 @@ class Queen < Piece
 end
 
 class King < Piece
-  attr_writer :incheck
-
   def initialize(color)
     super(color)
     @name = 'K'
-    @incheck = false
   end
 
   def valid?(_board, start, to)
@@ -117,6 +112,22 @@ class King < Piece
     else
       false
     end
+  end
+
+  def checked?(piece, board)
+    board = board.board
+
+    # Straight lines
+    check_straight(piece, board)
+
+    # Diagonals
+
+    # Pawns
+
+    # King
+
+    # Knights
+    
   end
 end
 

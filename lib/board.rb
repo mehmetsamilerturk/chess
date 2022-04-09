@@ -63,6 +63,8 @@ class Board
     end
   end
 
+  def determine_castling; end
+
   # prints the current state
   def print_board
     buffer = ''
@@ -170,6 +172,7 @@ class Board
       @ghost_pawn_active = true
     end
 
+    piece.moved = true
     @board[to[0]][to[1]] = @board[from[0]][from[1]]
     @board[from[0]][from[1]] = nil
 
