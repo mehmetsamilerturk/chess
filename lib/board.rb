@@ -19,7 +19,7 @@ class Board
 
   def valid?(board, start, to)
     if ((start[0].between?(0, 7) && start[1].between?(0, 7)) && to[0].between?(0, 7) && to[1].between?(0, 7)) &&
-       !board.board[start[0]][start[1]].ghost?
+       !board.board[start[0]][start[1]].ghost? && !determine_check(board, start)
 
       piece = board.board[start[0]][start[1]]
       target = board.board[to[0]][to[1]]
@@ -61,6 +61,27 @@ class Board
       puts 'INVALID LOCATION'.red
       false
     end
+  end
+
+  def get_location(piece)
+    @board.each_with_index do |arr, aindex|
+      arr.each_with_index do |square, sindex|
+        return [aindex, sindex] if square.name == piece.name && square.color == piece.color
+      end
+    end
+  end
+
+  def determine_check(board, start)
+    board = board.board
+    piece = board[start[0]][start[1]]
+
+    king = if piece.white?
+             board.flatten.select { |square| !square.nil? && square.white? && square.name == 'K' }
+           else
+             board.flatten.select { |square| !square.nil? && !square.white? && square.name == 'K' }
+           end
+    king_coord = get_location(king)
+    king.checked?(king_coord, board)
   end
 
   def determine_castling; end

@@ -115,6 +115,7 @@ class King < Piece
   end
 
   # piece = [0, 0] board = Board.new
+  # returns true if in check
   def checked?(piece, board)
     board = board.board
 

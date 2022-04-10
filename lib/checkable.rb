@@ -1,186 +1,179 @@
 # frozen_string_literal: true
 
+# methods to check if the king is in check
 module Checkable
   def check_down(board, i, j)
     piece = board[i][j]
-    loop do
-      until i + 1 > 7
-        i += 1
-        square = board[i][j]
-        if piece.white?
-          unless square.nil?
-            return false if square.white?
-            return true if !square.white? && (square.name == 'Q' || square.name == 'R')
-          end
-        else
-          unless square.nil?
-            return false unless square.white?
-            return true if square.white? && (square.name == 'Q' || square.name == 'R')
-          end
+    until i + 1 > 7
+      i += 1
+      square = board[i][j]
+      if piece.white?
+        unless square.nil?
+          return false if square.white?
+          return true if !square.white? && (square.name == 'Q' || square.name == 'R')
+        end
+      else
+        unless square.nil?
+          return false unless square.white?
+          return true if square.white? && (square.name == 'Q' || square.name == 'R')
         end
       end
-      return false
     end
+
+    false
   end
 
   def check_up(board, i, j)
     piece = board[i][j]
-    loop do
-      until (i - 1).negative?
-        i -= 1
-        square = board[i][j]
-        unless square.nil?
-          if piece.white?
-            return false if square.white?
-            return true if !square.white? && (square.name == 'Q' || square.name == 'R')
-          else
-            return false unless square.white?
-            return true if square.white? && (square.name == 'Q' || square.name == 'R')
-          end
+
+    until (i - 1).negative?
+      i -= 1
+      square = board[i][j]
+      unless square.nil?
+        if piece.white?
+          return false if square.white?
+          return true if !square.white? && (square.name == 'Q' || square.name == 'R')
+        else
+          return false unless square.white?
+          return true if square.white? && (square.name == 'Q' || square.name == 'R')
         end
       end
-      return false
     end
+    false
   end
 
   def check_left(board, i, j)
     piece = board[i][j]
-    loop do
-      until (j - 1).negative?
-        j -= 1
-        square = board[i][j]
-        if piece.white?
-          unless square.nil?
-            return false if square.white?
-            return true if !square.white? && (square.name == 'Q' || square.name == 'R')
-          end
-        else
-          unless square.nil?
-            return false unless square.white?
-            return true if square.white? && (square.name == 'Q' || square.name == 'R')
-          end
+
+    until (j - 1).negative?
+      j -= 1
+      square = board[i][j]
+      if piece.white?
+        unless square.nil?
+          return false if square.white?
+          return true if !square.white? && (square.name == 'Q' || square.name == 'R')
+        end
+      else
+        unless square.nil?
+          return false unless square.white?
+          return true if square.white? && (square.name == 'Q' || square.name == 'R')
         end
       end
-      return false
     end
+    false
   end
 
   def check_right(board, i, j)
     piece = board[i][j]
-    loop do
-      until j + 1 > 7
-        j += 1
-        square = board[i][j]
-        if piece.white?
-          unless square.nil?
-            return false if square.white?
-            return true if !square.white? && (square.name == 'Q' || square.name == 'R')
-          end
-        else
-          unless square.nil?
-            return false unless square.white?
-            return true if square.white? && (square.name == 'Q' || square.name == 'R')
-          end
+
+    until j + 1 > 7
+      j += 1
+      square = board[i][j]
+      if piece.white?
+        unless square.nil?
+          return false if square.white?
+          return true if !square.white? && (square.name == 'Q' || square.name == 'R')
+        end
+      else
+        unless square.nil?
+          return false unless square.white?
+          return true if square.white? && (square.name == 'Q' || square.name == 'R')
         end
       end
-      return false
     end
+    false
   end
 
   def check_top_left(board, i, j)
     # lower both column and row. until 0 for both
     piece = board[i][j]
-    loop do
-      until (i - 1).negative? || (j - 1).negative?
-        i -= 1
-        j -= 1
-        square = board[i][j]
-        if piece.white?
-          unless square.nil?
-            return false if square.white?
-            return true if !square.white? && (square.name == 'Q' || square.name == 'B')
-          end
-        else
-          unless square.nil?
-            return false unless square.white?
-            return true if square.white? && (square.name == 'Q' || square.name == 'B')
-          end
+
+    until (i - 1).negative? || (j - 1).negative?
+      i -= 1
+      j -= 1
+      square = board[i][j]
+      if piece.white?
+        unless square.nil?
+          return false if square.white?
+          return true if !square.white? && (square.name == 'Q' || square.name == 'B')
+        end
+      else
+        unless square.nil?
+          return false unless square.white?
+          return true if square.white? && (square.name == 'Q' || square.name == 'B')
         end
       end
-      return false
     end
+    false
   end
 
   def check_top_right(board, i, j)
     # increase column, decrease row. column until 7, row until 0
     piece = board[i][j]
-    loop do
-      until (i - 1).negative? || j + 1 > 7
-        i += 1
-        j -= 1
-        square = board[i][j]
-        if piece.white?
-          unless square.nil?
-            return false if square.white?
-            return true if !square.white? && (square.name == 'Q' || square.name == 'B')
-          end
-        else
-          unless square.nil?
-            return false unless square.white?
-            return true if square.white? && (square.name == 'Q' || square.name == 'B')
-          end
+
+    until (i - 1).negative? || j + 1 > 7
+      i += 1
+      j -= 1
+      square = board[i][j]
+      if piece.white?
+        unless square.nil?
+          return false if square.white?
+          return true if !square.white? && (square.name == 'Q' || square.name == 'B')
+        end
+      else
+        unless square.nil?
+          return false unless square.white?
+          return true if square.white? && (square.name == 'Q' || square.name == 'B')
         end
       end
-      return false
     end
+    false
   end
 
   def check_bottom_left(board, i, j)
     # increase row, decrease column. row until 7, column until 0
     piece = board[i][j]
-    loop do
-      until i + 1 > 7 || (j - 1).negative?
-        i += 1
-        j -= 1
-        square = board[i][j]
-        if piece.white?
-          unless square.nil?
-            return false if square.white?
-            return true if !square.white? && (square.name == 'Q' || square.name == 'B')
-          end
-        else
-          unless square.nil?
-            return false unless square.white?
-            return true if square.white? && (square.name == 'Q' || square.name == 'B')
-          end
+
+    until i + 1 > 7 || (j - 1).negative?
+      i += 1
+      j -= 1
+      square = board[i][j]
+      if piece.white?
+        unless square.nil?
+          return false if square.white?
+          return true if !square.white? && (square.name == 'Q' || square.name == 'B')
+        end
+      else
+        unless square.nil?
+          return false unless square.white?
+          return true if square.white? && (square.name == 'Q' || square.name == 'B')
         end
       end
-      return false
     end
+    false
   end
 
   def check_bottom_right(board, i, j)
     # increase both. both until 7
     piece = board[i][j]
-    loop do
-      until i + 1 > 7 || j + 1 > 7
-        i += 1
-        j += 1
-        square = board[i][j]
-        if piece.white?
-          unless square.nil?
-            return false if square.white?
-            return true if !square.white? && (square.name == 'Q' || square.name == 'B')
-          end
-        else
-          unless square.nil?
-            return false unless square.white?
-            return true if square.white? && (square.name == 'Q' || square.name == 'B')
-          end
+
+    until i + 1 > 7 || j + 1 > 7
+      i += 1
+      j += 1
+      square = board[i][j]
+      if piece.white?
+        unless square.nil?
+          return false if square.white?
+          return true if !square.white? && (square.name == 'Q' || square.name == 'B')
+        end
+      else
+        unless square.nil?
+          return false unless square.white?
+          return true if square.white? && (square.name == 'Q' || square.name == 'B')
         end
       end
-      return false
     end
+    false
   end
 
   # true if in check
