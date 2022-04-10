@@ -121,13 +121,13 @@ class King < Piece
     check_straight(piece, board)
 
     # Diagonals
+    check_diagonal(piece, board)
 
     # Pawns
 
     # King
 
     # Knights
-    
   end
 end
 

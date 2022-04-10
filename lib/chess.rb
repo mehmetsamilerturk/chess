@@ -113,9 +113,9 @@ end
 # board.move([6, 2], [5, 2])
 # board.print_board
 
-game = Chess.new
-game.play
-
 # game.rboard.board.flatten.each do |square|
 #   p square if square.ghost? unless square.nil?
 # end
+
+game = Chess.new
+game.play
