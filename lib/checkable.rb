@@ -227,6 +227,58 @@ module Checkable
     end
     false
   end
+
+  def check_king(piece, board)
+    i = piece[0]
+    j = piece[1]
+    king = board[i][j]
+
+    danger1 = board[i - 1][j - 1]
+    danger2 = board[i - 1][j]
+    danger3 = board[i - 1][j + 1]
+    danger4 = board[i][j - 1]
+    danger5 = board[i][j + 1]
+    danger6 = board[i + 1][j - 1]
+    danger7 = board[i + 1][j]
+    danger8 = board[i + 1][j + 1]
+
+    dangers = [danger1, danger2, danger3, danger4, danger5, danger6, danger7, danger8]
+    dangers.each do |danger|
+      if king.white?
+        return true if !danger.nil? && (!danger.white? && danger.name == 'K')
+      elsif !danger.nil? && (danger.white? && danger.name == 'K')
+        return true
+      end
+    end
+
+    false
+  end
+
+  def check_knights(piece, board)
+    i = piece[0]
+    j = piece[1]
+    king = board[i][j]
+
+    danger1 = board[i - 2][j - 1]
+    danger2 = board[i - 2][j + 1]
+    danger3 = board[i - 1][j - 2]
+    danger4 = board[i - 1][j + 2]
+    danger5 = board[i + 2][j - 1]
+    danger6 = board[i + 2][j + 1]
+    danger7 = board[i + 1][j - 2]
+    danger8 = board[i + 1][j + 2]
+
+    dangers = [danger1, danger2, danger3, danger4, danger5, danger6, danger7, danger8]
+    dangers.each do |danger|
+      if king.white?
+        return true if !danger.nil? && (!danger.white? && danger.name == 'N')
+      elsif !danger.nil? && (danger.white? && danger.name == 'N')
+        return true
+      end
+    end
+
+    false
+  end
 end
 
 # check_straight([7, 4], Board.new.board)

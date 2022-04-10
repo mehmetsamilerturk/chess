@@ -114,21 +114,16 @@ class King < Piece
     end
   end
 
+  # piece = [0, 0] board = Board.new
   def checked?(piece, board)
     board = board.board
 
-    # Straight lines
-    check_straight(piece, board)
-
-    # Diagonals
-    check_diagonal(piece, board)
-
-    # Pawns
-    check_pawns(piece, board)
-
-    # King
-
-    # Knights
+    check_straight(piece,
+                   board) || check_diagonal(piece,
+                                            board) || check_pawns(piece,
+                                                                  board) || check_king(piece,
+                                                                                       board) || check_knights(piece,
+                                                                                                               board)
   end
 end
 
