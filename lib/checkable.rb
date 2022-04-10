@@ -208,6 +208,25 @@ module Checkable
       false
     end
   end
+
+  def check_pawns(piece, board)
+    i = piece[0]
+    j = piece[1]
+    king = board[i][j]
+
+    if king.white?
+      wdanger1 = board[i - 1][j - 1]
+      wdanger2 = board[i - 1][j + 1]
+      return true if !wdanger1.nil? && (!wdanger1.white? && wdanger1.name == 'P')
+      return true if !wdanger2.nil? && (!wdanger2.white? && wdanger2.name == 'P')
+    else
+      bdanger1 = board[i + 1][j - 1]
+      bdanger2 = board[i + 1][j + 1]
+      return true if !bdanger1.nil? && (!bdanger1.white? && bdanger1.name == 'P')
+      return true if !bdanger2.nil? && (!bdanger2.white? && bdanger2.name == 'P')
+    end
+    false
+  end
 end
 
 # check_straight([7, 4], Board.new.board)

@@ -124,6 +124,7 @@ class King < Piece
     check_diagonal(piece, board)
 
     # Pawns
+    check_pawns(piece, board)
 
     # King
 
