@@ -19,7 +19,7 @@ class Board
 
   def valid?(board, start, to)
     if ((start[0].between?(0, 7) && start[1].between?(0, 7)) && to[0].between?(0, 7) && to[1].between?(0, 7)) &&
-       !board.board[start[0]][start[1]].ghost? && !determine_check(board, start)
+       !board.board[start[0]][start[1]].ghost?
 
       piece = board.board[start[0]][start[1]]
       target = board.board[to[0]][to[1]]
@@ -71,17 +71,22 @@ class Board
     end
   end
 
-  def determine_check(board, start)
-    board = board.board
-    piece = board[start[0]][start[1]]
+  # returns true if the next move causes king to be in check
+  def determine_check(start, to)
+    piece = @board[start[0]][start[1]]
+    basic_move(start, to)
 
     king = if piece.white?
-             board.flatten.select { |square| !square.nil? && square.white? && square.name == 'K' }
+             @board.flatten.select { |square| !square.nil? && square.white? && square.name == 'K' }
            else
-             board.flatten.select { |square| !square.nil? && !square.white? && square.name == 'K' }
+             @board.flatten.select { |square| !square.nil? && !square.white? && square.name == 'K' }
            end
+
     king_coord = get_location(king)
-    king.checked?(king_coord, board)
+    result = king.checked?(king_coord, @board)
+
+    reverse_basic_move(start, to)
+    result
   end
 
   def determine_castling; end
@@ -201,6 +206,16 @@ class Board
   end
 
   private
+
+  def basic_move(from, to)
+    @board[to[0]][to[1]] = @board[from[0]][from[1]]
+    @board[from[0]][from[1]] = nil
+  end
+
+  def reverse_basic_move(from, to)
+    @board[from[0]][from[1]] = @board[to[0]][to[1]]
+    @board[to[0]][to[1]] = nil
+  end
 
   def fill_board
     @board = []

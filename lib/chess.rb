@@ -12,6 +12,31 @@ class Chess
     @rboard = Board.new
   end
 
+  # game loop
+  def play
+    loop do
+      move
+    end
+  end
+
+  private
+
+  def execute(from, to, turn, gcolor)
+    if rboard.determine_check(from, to)
+      puts 'Your king is in check!'
+    elsif piece.valid?(rboard, from, to)
+      if rboard.valid?(rboard, from, to)
+        rboard.move(from, to)
+        rboard.turn = turn
+        clean_ghosts(gcolor)
+      else
+        puts 'ILLEGAL MOVE'.red
+      end
+    else
+      puts 'INVALID MOVE!'.red
+    end
+  end
+
   # moving a piece to its destination
   def move
     puts ''
@@ -32,17 +57,7 @@ class Chess
         piece = rboard.board[from[0]][from[1]]
       end
 
-      if piece.valid?(rboard, from, to)
-        if rboard.valid?(rboard, from, to)
-          rboard.move(from, to)
-          rboard.turn = false
-          clean_ghosts('black')
-        else
-          puts 'INVALID MOVE'.red
-        end
-      else
-        puts 'INVALID MOVE!'.red
-      end
+      execute(from, to, false, 'black')
     else
       while piece.white?
         puts
@@ -53,24 +68,7 @@ class Chess
         piece = rboard.board[from[0]][from[1]]
       end
 
-      if piece.valid?(rboard, from, to)
-        if rboard.valid?(rboard, from, to)
-          rboard.move(from, to)
-          rboard.turn = true
-          clean_ghosts('white')
-        else
-          puts 'INVALID MOVE'.red
-        end
-      else
-        puts 'INVALID MOVE'.red
-      end
-    end
-  end
-
-  # game loop
-  def play
-    loop do
-      move
+      execute(from, to, true, 'white')
     end
   end
 
@@ -87,8 +85,6 @@ class Chess
 
     [[location[0].to_i, location[1].to_i], [destination[0].to_i, destination[1].to_i]]
   end
-
-  private
 
   def clean_ghosts(color)
     @rboard.board.flatten.each do |square|
