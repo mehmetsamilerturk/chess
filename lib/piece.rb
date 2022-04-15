@@ -117,12 +117,23 @@ class King < Piece
   # piece = [0, 0] board = Board.new
   # returns true if in check
   def checked?(piece, board)
-    check_straight(piece,
-                   board) || check_diagonal(piece,
-                                            board) || check_pawns(piece,
-                                                                  board) || check_king(piece,
-                                                                                       board) || check_knights(piece,
-                                                                                                               board)
+    if check_straight(piece, board)
+      puts 'straight'
+      return true
+    elsif check_diagonal(piece, board)
+      puts 'diagonal'
+      return true
+    elsif check_pawns(piece, board)
+      puts 'pawn'
+      return true
+    elsif check_king(piece, board)
+      puts 'king'
+      return true
+    elsif check_knights(piece, board)
+      puts 'knight'
+      return true
+    end
+    false
   end
 end
 

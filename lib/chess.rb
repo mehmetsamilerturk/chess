@@ -19,11 +19,10 @@ class Chess
     end
   end
 
-  private
-
-  def execute(from, to, turn, gcolor)
+  def execute(from, to, turn, gcolor, piece)
     if rboard.determine_check(from, to)
-      puts 'Your king is in check!'
+      puts
+      puts 'Your king is in check!'.red
     elsif piece.valid?(rboard, from, to)
       if rboard.valid?(rboard, from, to)
         rboard.move(from, to)
@@ -57,7 +56,7 @@ class Chess
         piece = rboard.board[from[0]][from[1]]
       end
 
-      execute(from, to, false, 'black')
+      execute(from, to, false, 'black', piece)
     else
       while piece.white?
         puts
@@ -68,7 +67,7 @@ class Chess
         piece = rboard.board[from[0]][from[1]]
       end
 
-      execute(from, to, true, 'white')
+      execute(from, to, true, 'white', piece)
     end
   end
 
@@ -114,4 +113,9 @@ end
 # end
 
 game = Chess.new
+game.rboard.board.each_with_index do |array, row|
+  array.each_with_index do |square, column|
+    game.rboard.board[row][column] = nil if !square.nil? && (square.name == 'P')
+  end
+end
 game.play

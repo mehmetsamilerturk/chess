@@ -66,7 +66,7 @@ class Board
   def get_location(piece)
     @board.each_with_index do |arr, aindex|
       arr.each_with_index do |square, sindex|
-        return [aindex, sindex] if square.name == piece.name && square.color == piece.color
+        return [aindex, sindex] if !square.nil? && (square.name == piece.name && square.color == piece.color)
       end
     end
   end
@@ -77,9 +77,9 @@ class Board
     basic_move(start, to)
 
     king = if piece.white?
-             @board.flatten.select { |square| !square.nil? && square.white? && square.name == 'K' }
+             @board.flatten.find { |square| !square.nil? && square.white? && square.name == 'K' }
            else
-             @board.flatten.select { |square| !square.nil? && !square.white? && square.name == 'K' }
+             @board.flatten.find { |square| !square.nil? && !square.white? && square.name == 'K' }
            end
 
     king_coord = get_location(king)
