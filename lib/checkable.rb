@@ -318,6 +318,57 @@ module Checkable
 
     false
   end
+
+  def check_empty(rook_coord, board)
+    # left rook
+    if (rook_coord[1]).zero?
+      i = 1
+      until i > 3
+        square = board[7][i]
+        return false unless square.nil?
+
+        i += 1
+      end
+    # right rook
+    else
+      i = 5
+      until i > 6
+        square = board[7][i]
+        return false unless square.nil?
+
+        i += 1
+      end
+    end
+
+    true
+  end
+
+  def check_move_over(rook_coord, king_coord, board)
+    king = board[king_coord[0]][king_coord[1]]
+    # left rook
+    if (rook_coord[1]).zero?
+      i = 2
+      until i > 3
+        board[7][i] = king
+        return false if board[7][i].checked?
+
+        board[7][i] = nil
+        i += 1
+      end
+    # right rook
+    else
+      i = 5
+      until i > 6
+        board[7][i] = king
+        return false if board[7][i].checked?
+
+        board[7][i] = nil
+        i += 1
+      end
+    end
+
+    true
+  end
 end
 
 # check_straight([7, 4], Board.new.board)

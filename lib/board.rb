@@ -24,7 +24,9 @@ class Board
       piece = board.board[start[0]][start[1]]
       target = board.board[to[0]][to[1]]
 
-      if target.nil?
+      if piece.name == 'K' && piece.castling
+        true
+      elsif target.nil?
         true
       elsif target.ghost?
         if piece.name == 'P'
@@ -88,8 +90,6 @@ class Board
     reverse_basic_move(start, to)
     result
   end
-
-  def determine_castling; end
 
   # prints the current state
   def print_board
@@ -197,6 +197,8 @@ class Board
 
       @ghost_pawn_active = true
     end
+
+    return piece.execute_castling(piece.rook_castling, self) if piece.name == 'K' && piece.castling
 
     piece.moved = true
     @board[to[0]][to[1]] = @board[from[0]][from[1]]

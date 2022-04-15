@@ -50,11 +50,7 @@ class Rook < Piece
   end
 
   def valid?(_board, start, to)
-    if to[0] == start[0] || to[1] == start[1]
-      true
-    else
-      false
-    end
+    to[0] == start[0] || to[1] == start[1]
   end
 end
 
@@ -65,12 +61,8 @@ class Knight < Piece
   end
 
   def valid?(_board, start, to)
-    if ((to[1] - start[1]).abs == 1 && (to[0] - start[0]).abs == 2) ||
-       ((to[1] - start[1]).abs == 2 && (to[0] - start[0]).abs == 1)
-      true
-    else
-      false
-    end
+    ((to[1] - start[1]).abs == 1 && (to[0] - start[0]).abs == 2) ||
+      ((to[1] - start[1]).abs == 2 && (to[0] - start[0]).abs == 1)
   end
 end
 
@@ -92,26 +84,70 @@ class Queen < Piece
   end
 
   def valid?(_board, start, to)
-    if ((to[0] - start[0]).abs == (to[1] - start[1]).abs) || (to[0] == start[0] || to[1] == start[1])
-      true
-    else
-      false
-    end
+    ((to[0] - start[0]).abs == (to[1] - start[1]).abs) || (to[0] == start[0] || to[1] == start[1])
   end
 end
 
 class King < Piece
+  attr_accessor :castling, :rook_castling
+
   def initialize(color)
     super(color)
     @name = 'K'
+    @castling = false
+    @rook_castling = nil
   end
 
-  def valid?(_board, start, to)
-    if (to[1] - start[1]).abs <= 1 && (to[0] - start[0]).abs <= 1
-      true
-    else
-      false
+  def valid?(board, start, to)
+    rook = if to[1] == 2
+             white? ? board.board[7][0] : board.board[0][0]
+           else
+             white? ? board.board[7][7] : board.board[0][7]
+           end
+
+    if (!rook.nil? && to[1] == 2 || to[1] == 6) && castle?(rook, board)
+      @rook_castling = rook
+      return @castling = true
     end
+
+    (to[1] - start[1]).abs <= 1 && (to[0] - start[0]).abs <= 1
+  end
+
+  def execute_castling(rook, board)
+    king_coord = board.get_location(self)
+    rook_coord = board.get_location(rook)
+
+    if white?
+      if (rook_coord[1]).zero?
+        board.board[7][2] = self
+        board.board[king_coord[0]][king_coord[1]] = nil
+        board.board[7][3] = rook
+      else
+        board.board[7][6] = self
+        board.board[king_coord[0]][king_coord[1]] = nil
+        board.board[7][5] = rook
+      end
+    elsif (rook_coord[1]).zero?
+      board.board[0][2] = self
+      board.board[king_coord[0]][king_coord[1]] = nil
+      board.board[0][3] = rook
+    else
+      board.board[0][6] = self
+      board.board[king_coord[0]][king_coord[1]] = nil
+      board.board[0][5] = rook
+    end
+    board.board[rook_coord[0]][rook_coord[1]] = nil
+  end
+
+  # true if available
+  def castle?(rook, board)
+    king_coord = board.get_location(self)
+    rook_coord = board.get_location(rook)
+
+    !rook.moved? && !moved? && !checked?(king_coord,
+                                         board.board) && check_empty(rook_coord,
+                                                                     board.board) && check_move_over(rook_coord,
+                                                                                                     king_coord, board.board)
   end
 
   # piece = [0, 0] board = Board.new
@@ -133,6 +169,7 @@ class King < Piece
       # puts 'knight'
       return true
     end
+
     false
   end
 end

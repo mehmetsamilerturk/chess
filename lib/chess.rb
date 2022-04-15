@@ -108,15 +108,5 @@ end
 # board.move([6, 2], [5, 2])
 # board.print_board
 
-# game.rboard.board.flatten.each do |square|
-#   p square if square.ghost? unless square.nil?
-# end
-=begin
-game = Chess.new
-game.rboard.board.each_with_index do |array, row|
-  array.each_with_index do |square, column|
-    game.rboard.board[row][column] = nil if !square.nil? && (square.name == 'P')
-  end
-end
-game.play
-=end
+# game = Chess.new
+# game.play
