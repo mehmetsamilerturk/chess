@@ -111,7 +111,7 @@ end
 # game.rboard.board.flatten.each do |square|
 #   p square if square.ghost? unless square.nil?
 # end
-
+=begin
 game = Chess.new
 game.rboard.board.each_with_index do |array, row|
   array.each_with_index do |square, column|
@@ -119,3 +119,4 @@ game.rboard.board.each_with_index do |array, row|
   end
 end
 game.play
+=end
