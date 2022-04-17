@@ -152,3 +152,55 @@ describe Queen do
     end
   end
 end
+
+describe Knight do
+  subject { Chess.new }
+  let(:board) { subject.rboard.board }
+  let(:knight) { board[7][1] }
+  let(:knight_coord) { subject.rboard.get_location(knight) }
+
+  context 'when moving' do
+    before do
+      allow(subject).to receive(:puts)
+    end
+
+    it 'can make a standard knight move' do
+      subject.execute(knight_coord, [5, 0], false, 'black', knight)
+      expect(board[5][0]).to eq(knight)
+    end
+
+    it 'can make another standard knight move' do
+      subject.rboard.basic_move(knight_coord, [4, 2])
+      subject.execute([4, 2], [3, 4], false, 'black', knight)
+    end
+
+    it 'can\'t move straight' do
+      expect(subject).to receive(:puts).with('INVALID MOVE!'.red)
+      subject.execute(knight_coord, [5, 1], false, 'black', knight)
+    end
+
+    it 'can\'t move diagonal' do
+      expect(subject).to receive(:puts).with('INVALID MOVE!'.red)
+      subject.execute(knight_coord, [5, 3], false, 'black', knight)
+    end
+  end
+
+  context 'when facing other pieces' do
+    before do
+      allow(subject).to receive(:puts)
+    end
+
+    it 'can jump over other pieces' do
+      subject.execute(knight_coord, [5, 2], false, 'black', knight)
+      expect(board[5][2]).to eq(knight)
+    end
+
+    it 'eats enemy piece' do
+      subject.rboard.basic_move(knight_coord, [2, 1])
+      target = board[0][2]
+      subject.execute([2, 1], [0, 2], false, 'black', knight)
+      expect(board[0][2].name).to eq('N')
+      expect(subject.rboard.captured_pieces.flatten).to include(target)
+    end
+  end
+end
