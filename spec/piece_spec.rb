@@ -50,8 +50,8 @@ describe Rook do
 
     # fails
     xit 'can\'t jump over other pieces' do
-      subject.execute(rook_coord, [5, 0], false, 'black', rook)
       expect(subject).to receive(:puts).with('ILLEGAL MOVE'.red)
+      subject.execute(rook_coord, [5, 0], false, 'black', rook)
     end
 
     it 'eats enemy piece' do
@@ -66,6 +66,45 @@ describe Rook do
       expect(subject).to receive(:puts).with('ILLEGAL MOVE'.red)
       subject.execute(rook_coord, [6, 0], false, 'black', rook)
       expect(subject.rboard.board[6][0].name).to eq('P')
+    end
+  end
+end
+
+describe Bishop do
+  subject { Chess.new }
+  let(:board) { subject.rboard.board }
+  let(:bishop) { board[7][2] }
+  let(:bishop_coord) { subject.rboard.get_location(bishop) }
+
+  context 'when moving' do
+    let(:new_coord) { [5, 2] }
+    let(:piece) { board[5][2] }
+
+    before do
+      allow(subject).to receive(:puts)
+      subject.rboard.basic_move(bishop_coord, [5, 2])
+    end
+
+    it 'moves diagonally' do
+      subject.execute(new_coord, [3, 4], false, 'black', piece)
+      expect(board[3][4]).to eq(piece)
+    end
+
+    it 'can\'t move straight' do
+      expect(subject).to receive(:puts).with('INVALID MOVE!'.red)
+      subject.execute(new_coord, [3, 2], false, 'black', piece)
+    end
+  end
+
+  context 'when facing other pieces' do
+    before do
+      allow(subject).to receive(:puts)
+    end
+
+    # fail
+    xit 'can\'t jump over other pieces' do
+      expect(subject).to receive(:puts).with('ILLEGAL MOVE'.red)
+      subject.execute(bishop_coord, [5, 4], false, 'black', bishop)
     end
   end
 end
