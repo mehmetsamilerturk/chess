@@ -207,8 +207,6 @@ class Board
     promote(piece, to) if determine_promotion(piece, to)
   end
 
-  private
-
   def basic_move(from, to)
     target = @board[to[0]][to[1]]
     @board[to[0]][to[1]] = @board[from[0]][from[1]]
