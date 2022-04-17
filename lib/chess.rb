@@ -108,5 +108,5 @@ end
 # board.move([6, 2], [5, 2])
 # board.print_board
 
-# game = Chess.new
-# game.play
+game = Chess.new
+game.play

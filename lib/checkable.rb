@@ -210,15 +210,29 @@ module Checkable
     king = board[i][j]
 
     if king.white?
-      wdanger1 = board[i - 1][j - 1]
-      wdanger2 = board[i - 1][j + 1]
+      wdanger1 = if (i - 1).negative? || (j - 1).negative?
+                   nil
+                 else
+                   board[i - 1][j - 1]
+                 end
+
+      wdanger2 = if (i - 1).negative?
+                   nil
+                 else
+                   board[i - 1][j + 1]
+                 end
       return true if !wdanger1.nil? && (!wdanger1.white? && wdanger1.name == 'P')
       return true if !wdanger2.nil? && (!wdanger2.white? && wdanger2.name == 'P')
     else
-      bdanger1 = board[i + 1][j - 1]
+      bdanger1 = if (j - 1).negative?
+                   nil
+                 else
+                   board[i + 1][j - 1]
+                 end
+
       bdanger2 = board[i + 1][j + 1]
-      return true if !bdanger1.nil? && (!bdanger1.white? && bdanger1.name == 'P')
-      return true if !bdanger2.nil? && (!bdanger2.white? && bdanger2.name == 'P')
+      return true if !bdanger1.nil? && (bdanger1.white? && bdanger1.name == 'P')
+      return true if !bdanger2.nil? && (bdanger2.white? && bdanger2.name == 'P')
     end
     false
   end
@@ -233,7 +247,11 @@ module Checkable
       danger2 = nil
       danger3 = nil
     else
-      danger1 = board[i - 1][j - 1]
+      danger1 = if (j - 1).negative?
+                  nil
+                else
+                  board[i - 1][j - 1]
+                end
       danger2 = board[i - 1][j]
       danger3 = board[i - 1][j + 1]
     end
@@ -242,7 +260,11 @@ module Checkable
       danger4 = nil
       danger5 = nil
     else
-      danger4 = board[i][j - 1]
+      danger4 = if (j - 1).negative?
+                  nil
+                else
+                  board[i][j - 1]
+                end
       danger5 = board[i][j + 1]
     end
 
@@ -251,7 +273,11 @@ module Checkable
       danger7 = nil
       danger8 = nil
     else
-      danger6 = board[i + 1][j - 1]
+      danger6 = if (j - 1).negative?
+                  nil
+                else
+                  board[i + 1][j - 1]
+                end
       danger7 = board[i + 1][j]
       danger8 = board[i + 1][j + 1]
     end
@@ -278,7 +304,11 @@ module Checkable
       danger1 = nil
       danger2 = nil
     else
-      danger1 = board[i - 2][j - 1]
+      danger1 = if (j - 1).negative?
+                  nil
+                else
+                  board[i - 2][j - 1]
+                end
       danger2 = board[i - 2][j + 1]
     end
 
@@ -286,7 +316,11 @@ module Checkable
       danger3 = nil
       danger4 = nil
     else
-      danger3 = board[i - 1][j - 2]
+      danger3 = if (j - 2).negative?
+                  nil
+                else
+                  board[i - 1][j - 2]
+                end
       danger4 = board[i - 1][j + 2]
     end
 
@@ -294,7 +328,11 @@ module Checkable
       danger5 = nil
       danger6 = nil
     else
-      danger5 = board[i + 2][j - 1]
+      danger5 = if (j - 1).negative?
+                  nil
+                else
+                  board[i + 2][j - 1]
+                end
       danger6 = board[i + 2][j + 1]
     end
 
@@ -302,7 +340,11 @@ module Checkable
       danger7 = nil
       danger8 = nil
     else
-      danger7 = board[i + 1][j - 2]
+      danger7 = if (j - 2).negative?
+                  nil
+                else
+                  board[i + 1][j - 2]
+                end
       danger8 = board[i + 1][j + 2]
     end
 
