@@ -34,12 +34,14 @@ class Board
             if target.white?
               false
             else
+              board.captured_pieces[1] << board.board[target.location[0] + 1][target.location[1]]
               board.board[target.location[0] + 1][target.location[1]] = nil
-              board.captured_pieces[1] << target
+              true
             end
           elsif target.white?
+            board.captured_pieces[0] << board.board[target.location[0] - 1][target.location[1]]
             board.board[target.location[0] - 1][target.location[1]] = nil
-            board.captured_pieces[0] << target
+            true
           else
             false
           end
@@ -68,7 +70,7 @@ class Board
   def get_location(piece)
     @board.each_with_index do |arr, aindex|
       arr.each_with_index do |square, sindex|
-        return [aindex, sindex] if !square.nil? && (square.name == piece.name && square.color == piece.color)
+        return [aindex, sindex] if square == piece
       end
     end
   end

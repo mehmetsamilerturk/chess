@@ -204,3 +204,106 @@ describe Knight do
     end
   end
 end
+
+describe Pawn do
+  subject { Chess.new }
+  let(:board) { subject.rboard.board }
+  let(:wpawn) { board[6][1] }
+  let(:wpawn_coord) { subject.rboard.get_location(wpawn) }
+
+  before do
+    allow(subject).to receive(:puts)
+  end
+
+  context 'when moving to an empty square' do
+    context 'when making the first move' do
+      it 'can make a double step straight forward' do
+        subject.execute(wpawn_coord, [4, 1], false, 'black', wpawn)
+        expect(board[4][1]).to eq(wpawn)
+      end
+
+      it 'leaves a ghost pawn one step back if double stepped' do
+        subject.execute(wpawn_coord, [4, 1], false, 'black', wpawn)
+        expect(board[5][1]).to be_ghost
+      end
+
+      it 'can be taken by an en-passant move by enemy pawn' do
+        bpawn = board[1][2]
+        subject.rboard.basic_move([1, 2], [4, 2])
+        subject.execute(wpawn_coord, [4, 1], false, 'black', wpawn)
+        subject.execute([4, 2], [5, 1], true, 'white', bpawn)
+
+        expect(board[4][1]).to be_nil
+        expect(board[5][1]).to eq(bpawn)
+        expect(subject.rboard.captured_pieces.flatten).to include(wpawn)
+      end
+
+      it 'can\'t be taken by an en-passant move if enemy is not pawn' do
+        enemy = board[0][0]
+        subject.rboard.basic_move([0, 0], [5, 2])
+        subject.execute(wpawn_coord, [4, 1], false, 'black', wpawn)
+
+        expect(subject).to receive(:puts).with('ILLEGAL MOVE'.red)
+        subject.execute([5, 2], [5, 1], true, 'white', enemy)
+
+        expect(board[5][2]).to eq(enemy)
+        expect(subject.rboard.captured_pieces.flatten).not_to include(wpawn)
+      end
+    end
+
+    it 'moves one square straight forward' do
+      subject.execute(wpawn_coord, [5, 1], false, 'black', wpawn)
+      expect(board[5][1]).to eq(wpawn)
+    end
+
+    it 'can\'t make a double step forward if it\'s not the first move' do
+      subject.execute(wpawn_coord, [5, 1], false, 'black', wpawn)
+      subject.execute([5, 1], [3, 1], false, 'black', wpawn)
+      expect(board[3][1]).to be_nil
+    end
+
+    it 'can\'t move diagonal' do
+      subject.execute(wpawn_coord, [5, 2], false, 'black', wpawn)
+      expect(board[5][2]).to be_nil
+    end
+
+    context 'when reaching the last row of the board' do
+      before do
+        allow(subject.rboard).to receive(:print)
+      end
+
+      it 'promotes to queen by default' do
+        board[0][1] = nil
+
+        subject.rboard.basic_move([6, 1], [1, 1])
+        subject.execute([1, 1], [0, 1], false, 'black', board[1][1])
+
+        expect(board[0][1].name).to eq('Q')
+      end
+    end
+  end
+
+  context 'when taking a piece of the opponent' do
+    it 'can only take diagonals one square away' do
+      enemy = board[1][2]
+      subject.rboard.basic_move([1, 2], [5, 2])
+      subject.execute(wpawn_coord, [5, 2], false, 'black', wpawn)
+
+      expect(board[6][1]).to be_nil
+      expect(board[5][2]).to eq(wpawn)
+      expect(subject.rboard.captured_pieces.flatten).to include(enemy)
+    end
+
+    it 'can\'t take straight' do
+      enemy = board[1][2]
+      subject.rboard.basic_move([1, 2], [5, 1])
+      subject.execute(wpawn_coord, [5, 1], false, 'black', wpawn)
+
+      expect(board[5][1]).to eq(enemy)
+      expect(board[6][1]).to eq(wpawn)
+      expect(subject.rboard.captured_pieces.flatten).not_to include(enemy)
+    end
+  end
+end
+
+# subject.rboard.print_board
