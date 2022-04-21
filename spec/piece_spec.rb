@@ -306,4 +306,28 @@ describe Pawn do
   end
 end
 
+describe King do
+  subject { Chess.new }
+  let(:board) { subject.rboard.board }
+  let(:king) { board[7][4] }
+  let(:king_coord) { subject.rboard.get_location(king) }
+
+  before do
+    allow(subject).to receive(:puts)
+  end
+
+  it 'moves one square in any direction' do
+    subject.rboard.basic_move(king_coord, [5, 4])
+    subject.execute([5, 4], [4, 4], false, 'black', king)
+    expect(board[4][4]).to eq(king)
+  end
+
+  it 'can\'t move more than one square' do
+    subject.rboard.basic_move(king_coord, [5, 4])
+    expect(subject).to receive(:puts).with('INVALID MOVE!'.red)
+    subject.execute([5, 4], [3, 4], false, 'black', king)
+    expect(board[3][4]).to be_nil
+  end
+end
+
 # subject.rboard.print_board
