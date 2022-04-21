@@ -150,7 +150,7 @@ class King < Piece
                                                                                                      king_coord, board.board)
   end
 
-  # piece = [0, 0] board = Board.new
+  # piece = [0, 0] board = Board.new.board
   # returns true if in check
   def checked?(piece, board)
     if check_straight(piece, board)

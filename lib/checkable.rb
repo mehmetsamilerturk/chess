@@ -392,7 +392,7 @@ module Checkable
       i = 2
       until i > 3
         board[7][i] = king
-        return false if board[7][i].checked?
+        return false if board[7][i].checked?([7, i], board)
 
         board[7][i] = nil
         i += 1
@@ -402,7 +402,7 @@ module Checkable
       i = 5
       until i > 6
         board[7][i] = king
-        return false if board[7][i].checked?
+        return false if board[7][i].checked?([7, i], board)
 
         board[7][i] = nil
         i += 1

@@ -32,4 +32,7 @@ describe Chess do
       end
     end
   end
+
+  describe 'castling' do
+  end
 end
