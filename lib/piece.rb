@@ -120,22 +120,19 @@ class King < Piece
     if white?
       if (rook_coord[1]).zero?
         board.board[7][2] = self
-        board.board[king_coord[0]][king_coord[1]] = nil
         board.board[7][3] = rook
       else
         board.board[7][6] = self
-        board.board[king_coord[0]][king_coord[1]] = nil
         board.board[7][5] = rook
       end
     elsif (rook_coord[1]).zero?
       board.board[0][2] = self
-      board.board[king_coord[0]][king_coord[1]] = nil
       board.board[0][3] = rook
     else
       board.board[0][6] = self
-      board.board[king_coord[0]][king_coord[1]] = nil
       board.board[0][5] = rook
     end
+    board.board[king_coord[0]][king_coord[1]] = nil
     board.board[rook_coord[0]][rook_coord[1]] = nil
   end
 
@@ -154,19 +151,19 @@ class King < Piece
   # returns true if in check
   def checked?(piece, board)
     if check_straight(piece, board)
-      puts 'straight'
+      # puts 'straight'
       return true
     elsif check_diagonal(piece, board)
-      puts 'diagonal'
+      # puts 'diagonal'
       return true
     elsif check_pawns(piece, board)
-      puts 'pawn'
+      # puts 'pawn'
       return true
     elsif check_king(piece, board)
-      puts 'king'
+      # puts 'king'
       return true
     elsif check_knights(piece, board)
-      puts 'knight'
+      # puts 'knight'
       return true
     end
 

@@ -391,20 +391,42 @@ module Checkable
     if (rook_coord[1]).zero?
       i = 2
       until i > 3
-        board[7][i] = king
-        return false if board[7][i].checked?([7, i], board)
-
-        board[7][i] = nil
+        if king.white?
+          board[7][i] = king
+          if board[7][i].checked?([7, i], board)
+            board[7][i] = nil
+            return false
+          end
+          board[7][i] = nil
+        else
+          board[0][i] = king
+          if board[0][i].checked?([0, i], board)
+            board[0][i] = nil
+            return false
+          end
+          board[0][i] = nil
+        end
         i += 1
       end
     # right rook
     else
       i = 5
       until i > 6
-        board[7][i] = king
-        return false if board[7][i].checked?([7, i], board)
-
-        board[7][i] = nil
+        if king.white?
+          board[7][i] = king
+          if board[7][i].checked?([7, i], board)
+            board[7][i] = nil
+            return false
+          end
+          board[7][i] = nil
+        else
+          board[0][i] = king
+          if board[0][i].checked?([0, i], board)
+            board[0][i] = nil
+            return false
+          end
+          board[0][i] = nil
+        end
         i += 1
       end
     end
