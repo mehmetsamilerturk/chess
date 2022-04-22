@@ -77,6 +77,93 @@ describe Chess do
         expect(board[0][3].name).to eq('R')
       end
     end
+
+    context 'when castling is not allowed' do
+      let(:rook) { board[7][7] }
+
+      context 'when the king that makes the castling move has moved in the game' do
+        before do
+          subject.execute([7, 4], [7, 3], false, 'black', wking)
+          subject.execute([7, 3], [7, 4], false, 'black', wking)
+        end
+
+        it 'restricts castling' do
+          expect(subject).to receive(:puts).with('INVALID MOVE!'.red)
+          subject.execute([7, 4], [7, 6], false, 'black', wking)
+          expect(board[7][6]).to be_nil
+        end
+      end
+
+      context 'when the rook that makes the castling move has moved in the game' do
+        before do
+          subject.execute([7, 7], [7, 6], false, 'black', rook)
+          subject.execute([7, 6], [7, 7], false, 'black', rook)
+        end
+
+        it 'restricts castling' do
+          expect(subject).to receive(:puts).with('INVALID MOVE!'.red)
+          subject.execute([7, 4], [7, 6], false, 'black', wking)
+          expect(board[7][6]).to be_nil
+          expect(board[7][7]).to eq(rook)
+        end
+      end
+
+      context 'when the king is in check' do
+        before do
+          # to not make it mated
+          board[6][4] = nil
+          subject.rboard.basic_move([0, 0], [7, 2])
+        end
+
+        it 'restricts castling' do
+          expect(subject).to receive(:puts).with('Your king is in check!'.red)
+          subject.execute([7, 4], [7, 6], false, 'black', wking)
+          expect(board[7][6]).to be_nil
+          expect(board[7][7]).to eq(rook)
+        end
+      end
+
+      context 'when the king moves over a square that is attacked by an enemy piece during the castling move' do
+        before do
+          board[6][5] = nil
+          subject.rboard.basic_move([0, 0], [4, 5])
+        end
+
+        it 'restricts castling' do
+          expect(subject).to receive(:puts).with('INVALID MOVE!'.red)
+          subject.execute([7, 4], [7, 6], false, 'black', wking)
+          expect(board[7][6]).to be_nil
+          expect(board[7][7]).to eq(rook)
+        end
+      end
+
+      context 'when the king moves to a square that is attacked by an enemy piece during the castling move' do
+        before do
+          board[6][6] = nil
+          subject.rboard.basic_move([0, 0], [4, 6])
+        end
+
+        it 'restricts castling' do
+          expect(subject).to receive(:puts).with('Your king is in check!'.red)
+          subject.execute([7, 4], [7, 6], false, 'black', wking)
+          expect(board[7][6]).to be_nil
+          expect(board[7][7]).to eq(rook)
+        end
+      end
+
+      context 'when all squares between the rook and king before the castling move are not empty' do
+        before do
+          subject.rboard.basic_move([7, 0], [7, 5])
+        end
+
+        it 'restricts castling' do
+          expect(subject).to receive(:puts).with('INVALID MOVE!'.red)
+          subject.execute([7, 4], [7, 6], false, 'black', wking)
+          expect(board[7][6]).to be_nil
+          expect(board[7][7]).to eq(rook)
+        end
+      end
+    end
   end
 end
 
