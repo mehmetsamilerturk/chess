@@ -165,6 +165,54 @@ describe Chess do
       end
     end
   end
+
+  describe 'stalemate' do
+    context 'when a player cannot make any legal move, but he/she is not in check' do
+      before do
+        subject.rboard.board.each_with_index do |arr, aindex|
+          arr.each_with_index do |square, sindex|
+            if !square.nil? && (square.name == 'P' || square.name == 'Q' || square.name == 'N' || square.name == 'B')
+              subject.rboard.board[aindex][sindex] = nil
+            end
+          end
+        end
+
+        subject.rboard.basic_move([7, 4], [2, 7])
+        subject.rboard.basic_move([7, 0], [2, 6])
+        subject.rboard.basic_move([0, 4], [0, 7])
+      end
+
+      xit 'ends the game' do
+        subject.rboard.print_board
+      end
+
+      xit 'declares draw' do
+        subject.rboard.print_board
+      end
+    end
+  end
+
+  describe 'mate' do
+    context 'when a player is in check, and he cannot make a move such that after the move, the king is not in check' do
+      before do
+        subject.rboard.board.each_with_index do |arr, aindex|
+          arr.each_with_index do |square, sindex|
+            if !square.nil? && (square.name == 'P' || square.name == 'Q' || square.name == 'N' || square.name == 'B' || (square.name == 'R' && !square.white?))
+              subject.rboard.board[aindex][sindex] = nil
+            end
+          end
+        end
+
+        subject.rboard.basic_move([0, 4], [0, 7])
+        subject.rboard.basic_move([7, 7], [0, 4])
+        subject.rboard.basic_move([7, 4], [2, 7])
+      end
+
+      xit 'makes the player mated' do
+        subject.rboard.print_board
+      end
+    end
+  end
 end
 
 # subject.rboard.print_board
