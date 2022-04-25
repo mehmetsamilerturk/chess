@@ -212,6 +212,33 @@ describe Chess do
         expect(subject.rboard.determine_mate([0, 7])).to be true
       end
     end
+
+    context 'when a player is one move away from mate' do
+      before do
+        allow(subject).to receive(:puts)
+        allow(subject).to receive(:print)
+        allow(subject.rboard).to receive(:puts)
+        allow(subject.rboard).to receive(:print)
+        allow(subject).to receive(:gets).and_return('34', '04', '07', '06')
+
+        subject.rboard.board.each_with_index do |arr, aindex|
+          arr.each_with_index do |square, sindex|
+            if !square.nil? && (square.name == 'P' || square.name == 'Q' || square.name == 'N' || square.name == 'B' || (square.name == 'R' && !square.white?))
+              subject.rboard.board[aindex][sindex] = nil
+            end
+          end
+        end
+
+        subject.rboard.basic_move([0, 4], [0, 7])
+        subject.rboard.basic_move([7, 7], [3, 4])
+        subject.rboard.basic_move([7, 4], [2, 7])
+      end
+
+      it 'ends the game' do
+        expect(subject).to receive(:over?)
+        subject.play
+      end
+    end
   end
 end
 

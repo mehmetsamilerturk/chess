@@ -6,14 +6,15 @@ require_relative 'color'
 
 # State of the game
 class Chess
-  attr_accessor :rboard
+  attr_accessor :rboard, :over
 
   def initialize
     @rboard = Board.new
+    @over = false
   end
 
   def over?
-    @rboard.over
+    @over
   end
 
   # game loop
@@ -24,7 +25,10 @@ class Chess
   end
 
   def execute(from, to, turn, gcolor, piece)
-    if rboard.determine_check(from, to)
+    if rboard.determine_mate(from)
+      puts piece.white? ? 'BLACK WINS!' : 'WHITE WINS!'
+      @over = true
+    elsif rboard.determine_check(from, to)
       puts
       puts 'Your king is in check!'.red
     elsif piece.valid?(rboard, from, to)
@@ -104,27 +108,3 @@ class Chess
   end
 end
 
-# board = Board.new
-# p board.board[7][4].valid?(board.board, [7, 4], [4, 4])
-# [7] is row and [3] is column
-# p board.board[7][3]
-# board.print_board
-# board.move([6, 2], [5, 2])
-# board.print_board
-
-# game = Chess.new
-# game.play
-# game.rboard.print_board
-# p game.rboard.determine_mate([6, 2])
-
-# game.rboard.board.each_with_index do |arr, aindex|
-#   arr.each_with_index do |square, sindex|
-#     if !square.nil? && (square.name == 'P' || square.name == 'Q' || square.name == 'N' || square.name == 'B')
-#       game.rboard.board[aindex][sindex] = nil
-#     end
-#   end
-# end
-#
-# game.rboard.basic_move([7, 4], [2, 7])
-# game.rboard.basic_move([7, 0], [2, 6])
-# game.rboard.basic_move([0, 4], [0, 7])

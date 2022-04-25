@@ -5,7 +5,7 @@ require_relative 'color'
 
 # Configuration of the board
 class Board
-  attr_accessor :board, :turn, :captured_pieces, :ghost_pawns_white, :ghost_pawns_black, :over
+  attr_accessor :board, :turn, :captured_pieces, :ghost_pawns_white, :ghost_pawns_black
 
   def initialize
     # true if white's turn
@@ -15,7 +15,6 @@ class Board
     @captured_pieces = [[], []]
     @ghost_pawns_white = []
     @ghost_pawns_black = []
-    @over = false
   end
 
   def valid?(board, start, to)
@@ -149,7 +148,7 @@ class Board
       i += 1
     end
 
-    @over = true
+    true
   end
 
   def generate_possible_moves(locations)
@@ -199,7 +198,11 @@ class Board
            else
              @board.flatten.find { |square| !square.nil? && !square.white? && square.name == 'K' }
            end
-
+    
+    if king.nil?
+      p [start, to]
+      print_board
+    end
     king_coord = get_location(king)
     result = king.checked?(king_coord, @board)
 
