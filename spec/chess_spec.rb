@@ -208,8 +208,8 @@ describe Chess do
         subject.rboard.basic_move([7, 4], [2, 7])
       end
 
-      xit 'makes the player mated' do
-        subject.rboard.print_board
+      it 'makes the player mated' do
+        expect(subject.rboard.determine_mate([0, 7])).to be true
       end
     end
   end

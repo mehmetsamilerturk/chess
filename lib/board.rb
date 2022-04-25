@@ -5,7 +5,7 @@ require_relative 'color'
 
 # Configuration of the board
 class Board
-  attr_accessor :board, :turn, :captured_pieces, :ghost_pawns_white, :ghost_pawns_black
+  attr_accessor :board, :turn, :captured_pieces, :ghost_pawns_white, :ghost_pawns_black, :over
 
   def initialize
     # true if white's turn
@@ -15,6 +15,7 @@ class Board
     @captured_pieces = [[], []]
     @ghost_pawns_white = []
     @ghost_pawns_black = []
+    @over = false
   end
 
   def valid?(board, start, to)
@@ -75,6 +76,54 @@ class Board
     end
   end
 
+  def valid_mate(start, to)
+    piece = @board[start[0]][start[1]]
+    target = @board[to[0]][to[1]]
+
+    if determine_check(start, to)
+      false
+    elsif piece.valid?(self, start, to)
+      if ((start[0].between?(0, 7) && start[1].between?(0, 7)) && to[0].between?(0, 7) && to[1].between?(0, 7)) &&
+         !@board[start[0]][start[1]].ghost?
+        if piece.name == 'K' && piece.castling
+          true
+        elsif target.nil?
+          true
+        elsif target.ghost?
+          if piece.name == 'P'
+            if piece.white?
+              if target.white?
+                false
+              else
+                true
+              end
+            elsif target.white?
+              true
+            else
+              false
+            end
+          else
+            false
+          end
+        elsif piece.name == 'P'
+          return false if to[1] == start[1]
+
+          if piece.white?
+            target.white? ? false : true
+          else
+            target.white? ? true : false
+          end
+        elsif piece.white?
+          target.white? ? false : true
+        else
+          target.white? ? true : false
+        end
+      else
+        false
+      end
+    end
+  end
+
   def get_piece_coords(start)
     piece = @board[start[0]][start[1]]
 
@@ -92,16 +141,15 @@ class Board
   def check_possible_moves(locations, possible_moves)
     i = 0
     locations.each do |start|
-      piece = @board[start[0]][start[1]]
-
       possible_moves[i].each do |to|
-        return true if valid_mate(start, to)
+        next if start == to
+        return false if valid_mate(start, to)
       end
 
       i += 1
     end
 
-    false
+    @over = true
   end
 
   def generate_possible_moves(locations)
@@ -123,8 +171,6 @@ class Board
     possible_moves
   end
 
-  def valid_mate(start, to); end
-
   # true if mated
   def determine_mate(start)
     piece = @board[start[0]][start[1]]
@@ -145,6 +191,7 @@ class Board
   # returns true if the next move causes king to be in check
   def determine_check(start, to)
     piece = @board[start[0]][start[1]]
+    # to not lose the piece
     target = basic_move(start, to)
 
     king = if piece.white?

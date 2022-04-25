@@ -12,9 +12,13 @@ class Chess
     @rboard = Board.new
   end
 
+  def over?
+    @rboard.over
+  end
+
   # game loop
   def play
-    loop do
+    until over?
       move
     end
   end
@@ -108,10 +112,10 @@ end
 # board.move([6, 2], [5, 2])
 # board.print_board
 
-game = Chess.new
+# game = Chess.new
 # game.play
-game.rboard.print_board
-p game.rboard.determine_mate([6, 2])
+# game.rboard.print_board
+# p game.rboard.determine_mate([6, 2])
 
 # game.rboard.board.each_with_index do |arr, aindex|
 #   arr.each_with_index do |square, sindex|
