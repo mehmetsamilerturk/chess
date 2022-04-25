@@ -235,7 +235,7 @@ describe Chess do
       end
 
       it 'ends the game' do
-        expect(subject).to receive(:over?)
+        expect(subject).to receive(:puts).with('WHITE WINS!')
         subject.play
       end
     end

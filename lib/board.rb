@@ -190,6 +190,7 @@ class Board
   # returns true if the next move causes king to be in check
   def determine_check(start, to)
     piece = @board[start[0]][start[1]]
+
     # to not lose the piece
     target = basic_move(start, to)
 
@@ -198,11 +199,13 @@ class Board
            else
              @board.flatten.find { |square| !square.nil? && !square.white? && square.name == 'K' }
            end
-    
+
+    # redirect checking to other methods if the move is eating the king       
     if king.nil?
-      p [start, to]
-      print_board
+      reverse_basic_move(start, to, target)
+      return false
     end
+      
     king_coord = get_location(king)
     result = king.checked?(king_coord, @board)
 

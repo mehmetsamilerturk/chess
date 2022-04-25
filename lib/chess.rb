@@ -17,7 +17,7 @@ class Chess
     @over
   end
 
-  # game loop
+  # game ends after mated player tries to make a move
   def play
     until over?
       move
@@ -108,3 +108,21 @@ class Chess
   end
 end
 
+=begin
+game = Chess.new
+
+game.rboard.board.each_with_index do |arr, aindex|
+  arr.each_with_index do |square, sindex|
+    if !square.nil? && (square.name == 'P' || square.name == 'Q' || square.name == 'N' || square.name == 'B' || (square.name == 'R' && !square.white?))
+      game.rboard.board[aindex][sindex] = nil
+    end
+  end
+end
+
+game.rboard.basic_move([0, 4], [0, 7])
+game.rboard.basic_move([7, 7], [3, 4])
+game.rboard.basic_move([7, 4], [2, 7])
+
+game.play
+
+=end
