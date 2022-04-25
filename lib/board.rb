@@ -75,6 +75,73 @@ class Board
     end
   end
 
+  def get_piece_coords(start)
+    piece = @board[start[0]][start[1]]
+
+    piece_coords = []
+
+    @board.each_with_index do |arr, aindex|
+      arr.each_with_index do |square, sindex|
+        piece_coords << [aindex, sindex] if !square.nil? && (square.color == piece.color)
+      end
+    end
+
+    piece_coords
+  end
+
+  def check_possible_moves(locations, possible_moves)
+    i = 0
+    locations.each do |start|
+      piece = @board[start[0]][start[1]]
+
+      possible_moves[i].each do |to|
+        return true if valid_mate(start, to)
+      end
+
+      i += 1
+    end
+
+    false
+  end
+
+  def generate_possible_moves(locations)
+    possible_moves = []
+
+    board_numbers = [0, 1, 2, 3, 4, 5, 6, 7]
+    all_moves = board_numbers.product(board_numbers)
+
+    locations.each do |coord|
+      piece = @board[coord[0]][coord[1]]
+      piece_moves = []
+      all_moves.each do |move|
+        piece_moves << move if piece.valid?(self, coord, move)
+      end
+      piece_moves
+      possible_moves << piece_moves
+    end
+
+    possible_moves
+  end
+
+  def valid_mate(start, to); end
+
+  # true if mated
+  def determine_mate(start)
+    piece = @board[start[0]][start[1]]
+
+    king = if piece.white?
+             @board.flatten.find { |square| !square.nil? && square.white? && square.name == 'K' }
+           else
+             @board.flatten.find { |square| !square.nil? && !square.white? && square.name == 'K' }
+           end
+
+    return false unless king.checked?(start, @board)
+
+    locations = get_piece_coords(start)
+    possible_moves = generate_possible_moves(locations)
+    check_possible_moves(locations, possible_moves)
+  end
+
   # returns true if the next move causes king to be in check
   def determine_check(start, to)
     piece = @board[start[0]][start[1]]

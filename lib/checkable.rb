@@ -353,7 +353,6 @@ module Checkable
       if king.white?
         return true if !danger.nil? && (!danger.white? && danger.name == 'N')
       elsif !danger.nil? && (danger.white? && danger.name == 'N')
-        p dangers
         return true
       end
     end
