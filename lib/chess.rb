@@ -126,20 +126,3 @@ class Chess
     end
   end
 end
-
-# game = Chess.new
-# game.rboard.board.each_with_index do |arr, aindex|
-#   arr.each_with_index do |square, sindex|
-#     if !square.nil? && (square.name == 'P' || square.name == 'Q' || square.name == 'N' || square.name == 'B')
-#       game.rboard.board[aindex][sindex] = nil
-#     end
-#   end
-# end
-#
-# game.rboard.basic_move([7, 4], [2, 7])
-# game.rboard.basic_move([7, 0], [7, 6])
-# game.rboard.basic_move([0, 4], [0, 7])
-# game.rboard.board[7][7] = nil
-# game.rboard.board[0][0] = nil
-#
-# game.play

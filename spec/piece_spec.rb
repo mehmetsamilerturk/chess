@@ -329,5 +329,3 @@ describe King do
     expect(board[3][4]).to be_nil
   end
 end
-
-# subject.rboard.print_board

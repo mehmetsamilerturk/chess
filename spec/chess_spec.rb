@@ -254,5 +254,3 @@ describe Chess do
     end
   end
 end
-
-# subject.rboard.print_board
