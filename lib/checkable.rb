@@ -433,5 +433,3 @@ module Checkable
     true
   end
 end
-
-# check_straight([7, 4], Board.new.board)

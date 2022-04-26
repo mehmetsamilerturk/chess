@@ -169,6 +169,11 @@ describe Chess do
   describe 'stalemate' do
     context 'when a player cannot make any legal move, but he/she is not in check' do
       before do
+        allow(subject).to receive(:puts)
+        allow(subject).to receive(:print)
+        allow(subject.rboard).to receive(:puts)
+        allow(subject.rboard).to receive(:print)
+
         subject.rboard.board.each_with_index do |arr, aindex|
           arr.each_with_index do |square, sindex|
             if !square.nil? && (square.name == 'P' || square.name == 'Q' || square.name == 'N' || square.name == 'B')
@@ -178,48 +183,42 @@ describe Chess do
         end
 
         subject.rboard.basic_move([7, 4], [2, 7])
-        subject.rboard.basic_move([7, 0], [2, 6])
+        subject.rboard.basic_move([7, 0], [7, 6])
         subject.rboard.basic_move([0, 4], [0, 7])
+
+        subject.rboard.board[7][7] = nil
+        subject.rboard.board[0][0] = nil
+
+        allow(subject).to receive(:gets).and_return('76', '26')
       end
 
-      xit 'ends the game' do
-        subject.rboard.print_board
+      it 'ends the game and declares draw' do
+        expect(subject).to receive(:puts).with('DRAW!')
+        subject.play
+        expect(subject.over).to be true
       end
 
-      xit 'declares draw' do
-        subject.rboard.print_board
+      it 'ends the game and declares draw(black)' do
+        board[0][7].color = true
+        board[2][7].color = false
+        board[7][6].color = false
+        subject.rboard.turn = false
+
+        expect(subject).to receive(:puts).with('DRAW!')
+        subject.play
+        expect(subject.over).to be true
       end
     end
   end
 
   describe 'mate' do
-    context 'when a player is in check, and he cannot make a move such that after the move, the king is not in check' do
-      before do
-        subject.rboard.board.each_with_index do |arr, aindex|
-          arr.each_with_index do |square, sindex|
-            if !square.nil? && (square.name == 'P' || square.name == 'Q' || square.name == 'N' || square.name == 'B' || (square.name == 'R' && !square.white?))
-              subject.rboard.board[aindex][sindex] = nil
-            end
-          end
-        end
-
-        subject.rboard.basic_move([0, 4], [0, 7])
-        subject.rboard.basic_move([7, 7], [0, 4])
-        subject.rboard.basic_move([7, 4], [2, 7])
-      end
-
-      it 'makes the player mated' do
-        expect(subject.rboard.determine_mate([0, 7])).to be true
-      end
-    end
-
     context 'when a player is one move away from mate' do
       before do
         allow(subject).to receive(:puts)
         allow(subject).to receive(:print)
         allow(subject.rboard).to receive(:puts)
         allow(subject.rboard).to receive(:print)
-        allow(subject).to receive(:gets).and_return('34', '04', '07', '06')
+        allow(subject).to receive(:gets).and_return('34', '04')
 
         subject.rboard.board.each_with_index do |arr, aindex|
           arr.each_with_index do |square, sindex|
@@ -232,11 +231,25 @@ describe Chess do
         subject.rboard.basic_move([0, 4], [0, 7])
         subject.rboard.basic_move([7, 7], [3, 4])
         subject.rboard.basic_move([7, 4], [2, 7])
+
+        board[7][0] = nil
       end
 
-      it 'ends the game' do
+      it 'ends the game and declares white as winner' do
         expect(subject).to receive(:puts).with('WHITE WINS!')
         subject.play
+        expect(subject.over).to be true
+      end
+
+      it 'ends the game and declares black as winner' do
+        board[0][7].color = true
+        board[2][7].color = false
+        board[3][4].color = false
+        subject.rboard.turn = false
+
+        expect(subject).to receive(:puts).with('BLACK WINS!')
+        subject.play
+        expect(subject.over).to be true
       end
     end
   end

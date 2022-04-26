@@ -17,18 +17,30 @@ class Chess
     @over
   end
 
-  # game ends after mated player tries to make a move
-  def play
-    until over?
-      move
+  def check_game_over
+    king = if @rboard.turn
+             @rboard.board.flatten.find { |square| !square.nil? && square.white? && square.name == 'K' }
+           else
+             @rboard.board.flatten.find { |square| !square.nil? && !square.white? && square.name == 'K' }
+           end
+
+    if king.checked?(@rboard.get_location(king), @rboard.board)
+      if @rboard.determine_mate
+        puts king.white? ? 'BLACK WINS!' : 'WHITE WINS!'
+        @over = true
+      else
+        false
+      end
+    elsif @rboard.determine_mate
+      puts 'DRAW!'
+      @over = true
+    else
+      false
     end
   end
 
   def execute(from, to, turn, gcolor, piece)
-    if rboard.determine_mate(from)
-      puts piece.white? ? 'BLACK WINS!' : 'WHITE WINS!'
-      @over = true
-    elsif rboard.determine_check(from, to)
+    if rboard.determine_check(from, to)
       puts
       puts 'Your king is in check!'.red
     elsif piece.valid?(rboard, from, to)
@@ -42,6 +54,13 @@ class Chess
     else
       puts 'INVALID MOVE!'.red
     end
+
+    check_game_over
+  end
+
+  # game ends after mated player tries to make a move
+  def play
+    move until @over
   end
 
   # moving a piece to its destination
@@ -53,7 +72,6 @@ class Chess
     from, to = ask_move
     piece = rboard.board[from[0]][from[1]]
 
-    # raise "no move" if ...
     if rboard.turn
       until piece.white?
         puts
@@ -65,6 +83,7 @@ class Chess
       end
 
       execute(from, to, false, 'black', piece)
+
     else
       while piece.white?
         puts
@@ -108,21 +127,19 @@ class Chess
   end
 end
 
-=begin
-game = Chess.new
-
-game.rboard.board.each_with_index do |arr, aindex|
-  arr.each_with_index do |square, sindex|
-    if !square.nil? && (square.name == 'P' || square.name == 'Q' || square.name == 'N' || square.name == 'B' || (square.name == 'R' && !square.white?))
-      game.rboard.board[aindex][sindex] = nil
-    end
-  end
-end
-
-game.rboard.basic_move([0, 4], [0, 7])
-game.rboard.basic_move([7, 7], [3, 4])
-game.rboard.basic_move([7, 4], [2, 7])
-
-game.play
-
-=end
+# game = Chess.new
+# game.rboard.board.each_with_index do |arr, aindex|
+#   arr.each_with_index do |square, sindex|
+#     if !square.nil? && (square.name == 'P' || square.name == 'Q' || square.name == 'N' || square.name == 'B')
+#       game.rboard.board[aindex][sindex] = nil
+#     end
+#   end
+# end
+#
+# game.rboard.basic_move([7, 4], [2, 7])
+# game.rboard.basic_move([7, 0], [7, 6])
+# game.rboard.basic_move([0, 4], [0, 7])
+# game.rboard.board[7][7] = nil
+# game.rboard.board[0][0] = nil
+#
+# game.play

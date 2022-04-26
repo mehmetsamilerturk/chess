@@ -9,8 +9,8 @@ class Piece
   include Movable
   include Checkable
 
-  attr_accessor :location
-  attr_reader :color, :name
+  attr_accessor :location, :color
+  attr_reader :name
   attr_writer :moved
 
   def initialize(color)
@@ -52,6 +52,10 @@ class Rook < Piece
   def valid?(_board, start, to)
     to[0] == start[0] || to[1] == start[1]
   end
+
+  def basic_valid?(_board, start, to)
+    to[0] == start[0] || to[1] == start[1]
+  end
 end
 
 class Knight < Piece
@@ -61,6 +65,11 @@ class Knight < Piece
   end
 
   def valid?(_board, start, to)
+    ((to[1] - start[1]).abs == 1 && (to[0] - start[0]).abs == 2) ||
+      ((to[1] - start[1]).abs == 2 && (to[0] - start[0]).abs == 1)
+  end
+
+  def basic_valid?(_board, start, to)
     ((to[1] - start[1]).abs == 1 && (to[0] - start[0]).abs == 2) ||
       ((to[1] - start[1]).abs == 2 && (to[0] - start[0]).abs == 1)
   end
@@ -75,6 +84,10 @@ class Bishop < Piece
   def valid?(_board, start, to)
     (to[1] - start[1]).abs == (to[0] - start[0]).abs
   end
+
+  def basic_valid?(_board, start, to)
+    (to[1] - start[1]).abs == (to[0] - start[0]).abs
+  end
 end
 
 class Queen < Piece
@@ -84,6 +97,10 @@ class Queen < Piece
   end
 
   def valid?(_board, start, to)
+    ((to[0] - start[0]).abs == (to[1] - start[1]).abs) || (to[0] == start[0] || to[1] == start[1])
+  end
+
+  def basic_valid?(_board, start, to)
     ((to[0] - start[0]).abs == (to[1] - start[1]).abs) || (to[0] == start[0] || to[1] == start[1])
   end
 end
@@ -99,17 +116,22 @@ class King < Piece
   end
 
   def valid?(board, start, to)
-    rook = if to[1] == 2
+    rook = case to[1]
+           when 2
              white? ? board.board[7][0] : board.board[0][0]
-           else
+           when 6
              white? ? board.board[7][7] : board.board[0][7]
            end
 
-    if (!rook.nil? && to[1] == 2 || to[1] == 6) && castle?(rook, board)
+    if (!rook.nil? && to[1] == 2 || to[1] == 6) && castle?(rook, board, to)
       @rook_castling = rook
       return @castling = true
     end
 
+    (to[1] - start[1]).abs <= 1 && (to[0] - start[0]).abs <= 1
+  end
+
+  def basic_valid?(_board, start, to)
     (to[1] - start[1]).abs <= 1 && (to[0] - start[0]).abs <= 1
   end
 
@@ -137,9 +159,13 @@ class King < Piece
   end
 
   # true if available
-  def castle?(rook, board)
+  def castle?(rook, board, to)
     king_coord = board.get_location(self)
     rook_coord = board.get_location(rook)
+
+    if rook.name != 'R' || rook.color != color || (to[1] == 6 && (rook_coord[1]).zero?) || (to[1] == 2 && rook_coord[1] == 7)
+      return false
+    end
 
     !rook.moved? && !moved? && !checked?(king_coord,
                                          board.board) && check_empty(rook_coord,
@@ -179,6 +205,33 @@ class Pawn < Piece
     @ghost = ghost
     @name = 'P'
     @location = location
+  end
+
+  def basic_valid?(board, start, to)
+    pawn_en = board.board[start[0]][start[1]]
+    target = board.board[to[0]][to[1]]
+
+    return false unless check_pawn_backwards(board, start, to)
+
+    if pawn_en.white? && !target.nil?
+      return false if target.white?
+    elsif !pawn_en.white? && !target.nil?
+      return false unless target.white?
+    end
+
+    if check_en_passant(board, start, to)
+      if check_pawn_captures(board, start, to)
+        return en_passant_moves(board, start, to) || pawn_capture_moves(board, start, to)
+      end
+
+      en_passant_moves(board, start, to)
+    elsif check_pawn_captures(board, start, to)
+      pawn_capture_moves(board, start, to)
+    elsif to[1] == start[1] && (to[0] - start[0]).abs == 1
+      true
+    else
+      false
+    end
   end
 
   def valid?(board, start, to)

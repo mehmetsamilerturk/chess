@@ -81,12 +81,10 @@ class Board
 
     if determine_check(start, to)
       false
-    elsif piece.valid?(self, start, to)
+    elsif piece.basic_valid?(self, start, to)
       if ((start[0].between?(0, 7) && start[1].between?(0, 7)) && to[0].between?(0, 7) && to[1].between?(0, 7)) &&
          !@board[start[0]][start[1]].ghost?
-        if piece.name == 'K' && piece.castling
-          true
-        elsif target.nil?
+        if target.nil?
           true
         elsif target.ghost?
           if piece.name == 'P'
@@ -161,7 +159,7 @@ class Board
       piece = @board[coord[0]][coord[1]]
       piece_moves = []
       all_moves.each do |move|
-        piece_moves << move if piece.valid?(self, coord, move)
+        piece_moves << move if piece.basic_valid?(self, coord, move)
       end
       piece_moves
       possible_moves << piece_moves
@@ -171,18 +169,14 @@ class Board
   end
 
   # true if mated
-  def determine_mate(start)
-    piece = @board[start[0]][start[1]]
-
-    king = if piece.white?
+  def determine_mate
+    king = if @turn
              @board.flatten.find { |square| !square.nil? && square.white? && square.name == 'K' }
            else
              @board.flatten.find { |square| !square.nil? && !square.white? && square.name == 'K' }
            end
 
-    return false unless king.checked?(start, @board)
-
-    locations = get_piece_coords(start)
+    locations = get_piece_coords(get_location(king))
     possible_moves = generate_possible_moves(locations)
     check_possible_moves(locations, possible_moves)
   end
@@ -200,12 +194,12 @@ class Board
              @board.flatten.find { |square| !square.nil? && !square.white? && square.name == 'K' }
            end
 
-    # redirect checking to other methods if the move is eating the king       
+    # redirect checking to other methods if the move is eating the king
     if king.nil?
       reverse_basic_move(start, to, target)
       return false
     end
-      
+
     king_coord = get_location(king)
     result = king.checked?(king_coord, @board)
 
