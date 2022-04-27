@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'yaml'
 require_relative 'board'
 require_relative 'piece'
@@ -24,9 +25,10 @@ class Chess
 
     choice = gets.chomp
 
-    if choice == '1'
+    case choice
+    when '1'
       move until @over
-    elsif choice == '2'
+    when '2'
       puts 'Loading..'
       unserialize(File.read('saves/save.txt'))
       move until @over
@@ -126,8 +128,8 @@ class Chess
 
   def ask_move
     puts
-    puts "Your move should be in this format: 34".yellow
-    puts "3 is row and 4 is column".yellow
+    puts 'Your move should be in this format: 34'.yellow
+    puts '3 is row and 4 is column'.yellow
     puts "Enter \'save\' to save the game".yellow
     puts
 

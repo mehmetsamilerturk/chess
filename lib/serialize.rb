@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module BasicSerializable
   # should point to a class; change to a different
   # class (e.g. MessagePack, JSON, YAML) to get a different
@@ -15,7 +17,7 @@ module BasicSerializable
 
   def unserialize(string)
     obj = YAML.safe_load(string, permitted_classes: [Board, Symbol, Rook, Bishop, Piece, Knight, King, Queen, Pawn])
-    obj.keys.each do |key|
+    obj.each_key do |key|
       instance_variable_set(key, obj[key])
     end
   end

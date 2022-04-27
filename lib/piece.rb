@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require_relative 'movable'
 require_relative 'color'
 require_relative 'checkable'

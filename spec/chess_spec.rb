@@ -215,7 +215,7 @@ describe Chess do
         subject.rboard.board[7][7] = nil
         subject.rboard.board[0][0] = nil
 
-        allow(subject).to receive(:gets).and_return('76', '26')
+        allow(subject).to receive(:gets).and_return('1', '76', '26')
       end
 
       it 'ends the game and declares draw' do
@@ -244,7 +244,7 @@ describe Chess do
         allow(subject).to receive(:print)
         allow(subject.rboard).to receive(:puts)
         allow(subject.rboard).to receive(:print)
-        allow(subject).to receive(:gets).and_return('34', '04')
+        allow(subject).to receive(:gets).and_return('1', '34', '04')
 
         subject.rboard.board.each_with_index do |arr, aindex|
           arr.each_with_index do |square, sindex|
