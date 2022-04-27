@@ -1,11 +1,14 @@
 # frozen_string_literal: true
-
+require 'yaml'
 require_relative 'board'
 require_relative 'piece'
 require_relative 'color'
+require_relative 'serialize'
 
 # State of the game
 class Chess
+  include BasicSerializable
+
   attr_accessor :rboard, :over
 
   def initialize
@@ -13,8 +16,37 @@ class Chess
     @over = false
   end
 
+  # game loop
+  def play
+    puts "Enter '1' to start a new game"
+    puts "Enter '2' to load a save file"
+    print '> '
+
+    choice = gets.chomp
+
+    if choice == '1'
+      move until @over
+    elsif choice == '2'
+      puts 'Loading..'
+      unserialize(File.read('saves/save.txt'))
+      move until @over
+    end
+  end
+
   def over?
     @over
+  end
+
+  def save_game
+    Dir.mkdir('saves') unless Dir.exist?('saves')
+    filename = 'saves/save.txt'
+    File.open(filename, 'w') do |file|
+      file.puts serialize
+    end
+  end
+
+  def load_game
+    unserialize(File.read('saves/save.txt'))
   end
 
   def check_game_over
@@ -58,11 +90,6 @@ class Chess
     check_game_over
   end
 
-  # game ends after mated player tries to make a move
-  def play
-    move until @over
-  end
-
   # moving a piece to its destination
   def move
     puts ''
@@ -83,7 +110,6 @@ class Chess
       end
 
       execute(from, to, false, 'black', piece)
-
     else
       while piece.white?
         puts
@@ -100,11 +126,21 @@ class Chess
 
   def ask_move
     puts
-    puts 'Your move should be in this format: 34'
-    puts '3 is row and 4 is column'
+    puts "Your move should be in this format: 34".yellow
+    puts "3 is row and 4 is column".yellow
+    puts "Enter \'save\' to save the game".yellow
+    puts
 
     print 'Enter the location of your piece> '
     location = gets.chomp
+
+    if location == 'save'
+      puts 'Saving...'
+      save_game
+
+      print 'Enter the location of your piece> '
+      location = gets.chomp
+    end
 
     print 'Enter the destination> '
     destination = gets.chomp
