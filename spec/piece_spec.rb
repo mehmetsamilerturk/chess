@@ -48,9 +48,8 @@ describe Rook do
       allow(subject).to receive(:puts)
     end
 
-    # fails
-    xit 'can\'t jump over other pieces' do
-      expect(subject).to receive(:puts).with('ILLEGAL MOVE'.red)
+    it 'can\'t jump over other pieces' do
+      expect(subject).to receive(:puts).with('INVALID MOVE!'.red)
       subject.execute(rook_coord, [5, 0], false, 'black', rook)
     end
 
@@ -101,9 +100,8 @@ describe Bishop do
       allow(subject).to receive(:puts)
     end
 
-    # fail
-    xit 'can\'t jump over other pieces' do
-      expect(subject).to receive(:puts).with('ILLEGAL MOVE'.red)
+    it 'can\'t jump over other pieces' do
+      expect(subject).to receive(:puts).with('INVALID MOVE!'.red)
       subject.execute(bishop_coord, [5, 4], false, 'black', bishop)
     end
   end
@@ -145,9 +143,8 @@ describe Queen do
       allow(subject).to receive(:puts)
     end
 
-    # fail
-    xit 'can\'t jump over other pieces' do
-      expect(subject).to receive(:puts).with('ILLEGAL MOVE'.red)
+    it 'can\'t jump over other pieces' do
+      expect(subject).to receive(:puts).with('INVALID MOVE!'.red)
       subject.execute(queen_coord, [5, 3], false, 'black', queen)
     end
   end

@@ -448,4 +448,112 @@ module Checkable
 
     true
   end
+
+  def check_up_mover(start, to, board)
+    srow = start[0]
+    scolumn = start[1]
+
+    until srow == (to[0] + 1)
+      srow -= 1
+      square = board[srow][scolumn]
+      return true unless square.nil?
+    end
+
+    false
+  end
+
+  def check_down_mover(start, to, board)
+    srow = start[0]
+    scolumn = start[1]
+
+    until srow == (to[0] - 1)
+      srow += 1
+      square = board[srow][scolumn]
+      return true unless square.nil?
+    end
+
+    false
+  end
+
+  def check_left_mover(start, to, board)
+    srow = start[0]
+    scolumn = start[1]
+
+    until scolumn == (to[1] + 1)
+      scolumn -= 1
+      square = board[srow][scolumn]
+      return true unless square.nil?
+    end
+
+    false
+  end
+
+  def check_right_mover(start, to, board)
+    srow = start[0]
+    scolumn = start[1]
+
+    until scolumn == (to[1] - 1)
+      scolumn += 1
+      square = board[srow][scolumn]
+      return true unless square.nil?
+    end
+
+    false
+  end
+
+  def check_bottom_left_mover(start, to, board)
+    srow = start[0]
+    scolumn = start[1]
+
+    until (srow == (to[0] - 1)) || (scolumn == (to[0] + 1))
+      srow += 1
+      scolumn -= 1
+      square = board[srow][scolumn]
+      return true unless square.nil?
+    end
+
+    false
+  end
+
+  def check_bottom_right_mover(start, to, board)
+    srow = start[0]
+    scolumn = start[1]
+
+    until (srow == (to[0] - 1)) || (scolumn == (to[0] - 1))
+      srow += 1
+      scolumn += 1
+      square = board[srow][scolumn]
+      return true unless square.nil?
+    end
+
+    false
+  end
+
+  def check_top_left_mover(start, to, board)
+    srow = start[0]
+    scolumn = start[1]
+
+    until (srow == (to[0] + 1)) || (scolumn == (to[0] + 1))
+      srow -= 1
+      scolumn -= 1
+      square = board[srow][scolumn]
+      return true unless square.nil?
+    end
+
+    false
+  end
+
+  def check_top_right_mover(start, to, board)
+    srow = start[0]
+    scolumn = start[1]
+
+    until (srow == (to[0] + 1)) || (scolumn == (to[0] - 1))
+      srow -= 1
+      scolumn += 1
+      square = board[srow][scolumn]
+      return true unless square.nil?
+    end
+
+    false
+  end
 end

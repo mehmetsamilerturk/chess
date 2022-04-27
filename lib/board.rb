@@ -67,10 +67,47 @@ class Board
     end
   end
 
+  def clear
+    @board.each_with_index do |arr, aindex|
+      arr.each_with_index do |_square, sindex|
+        @board[aindex][sindex] = nil
+      end
+    end
+  end
+
   def get_location(piece)
     @board.each_with_index do |arr, aindex|
       arr.each_with_index do |square, sindex|
         return [aindex, sindex] if square == piece
+      end
+    end
+  end
+
+  # the direction queen, bishop or rook heading
+  def get_direction(start, to)
+    if to[1] == start[1]
+      if to[0] < start[0]
+        'up'
+      elsif to[0] > start[0]
+        'down'
+      end
+    elsif to[0] == start[0]
+      if to[1] < start[1]
+        'left'
+      elsif to[1] > start[1]
+        'right'
+      end
+    elsif to[0] > start[0]
+      if to[1] < start[1]
+        'bottom_left'
+      elsif to[1] > start[1]
+        'bottom_right'
+      end
+    elsif to[0] < start[0]
+      if to[1] < start[1]
+        'top_left'
+      elsif to[1] > start[1]
+        'top_right'
       end
     end
   end

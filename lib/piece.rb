@@ -18,6 +18,31 @@ class Piece
     @moved = false
   end
 
+  # true if moving over
+  def prevent_move_over(start, to, board)
+    direction = board.get_direction(start, to)
+
+    # mover -> move over
+    case direction
+    when 'up'
+      check_up_mover(start, to, board.board)
+    when 'down'
+      check_down_mover(start, to, board.board)
+    when 'left'
+      check_left_mover(start, to, board.board)
+    when 'right'
+      check_right_mover(start, to, board.board)
+    when 'bottom_left'
+      check_bottom_left_mover(start, to, board.board)
+    when 'bottom_right'
+      check_bottom_right_mover(start, to, board.board)
+    when 'top_left'
+      check_top_left_mover(start, to, board.board)
+    when 'top_right'
+      check_top_right_mover(start, to, board.board)
+    end
+  end
+
   def ghost?
     # true if ghost
     @ghost
@@ -49,11 +74,15 @@ class Rook < Piece
     @name = 'R'
   end
 
-  def valid?(_board, start, to)
+  def valid?(board, start, to)
+    return false if prevent_move_over(start, to, board)
+
     to[0] == start[0] || to[1] == start[1]
   end
 
-  def basic_valid?(_board, start, to)
+  def basic_valid?(board, start, to)
+    return false if prevent_move_over(start, to, board)
+
     to[0] == start[0] || to[1] == start[1]
   end
 end
@@ -81,11 +110,15 @@ class Bishop < Piece
     @name = 'B'
   end
 
-  def valid?(_board, start, to)
+  def valid?(board, start, to)
+    return false if prevent_move_over(start, to, board)
+
     (to[1] - start[1]).abs == (to[0] - start[0]).abs
   end
 
-  def basic_valid?(_board, start, to)
+  def basic_valid?(board, start, to)
+    return false if prevent_move_over(start, to, board)
+
     (to[1] - start[1]).abs == (to[0] - start[0]).abs
   end
 end
@@ -98,11 +131,15 @@ class Queen < Piece
 
   def check_jump_over; end
 
-  def valid?(_board, start, to)
+  def valid?(board, start, to)
+    return false if prevent_move_over(start, to, board)
+
     ((to[0] - start[0]).abs == (to[1] - start[1]).abs) || (to[0] == start[0] || to[1] == start[1])
   end
 
-  def basic_valid?(_board, start, to)
+  def basic_valid?(board, start, to)
+    return false if prevent_move_over(start, to, board)
+
     ((to[0] - start[0]).abs == (to[1] - start[1]).abs) || (to[0] == start[0] || to[1] == start[1])
   end
 end
