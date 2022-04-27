@@ -33,6 +33,32 @@ describe Chess do
         expect(subject.rboard.board[1][4]).to eq(piece)
       end
     end
+
+    context 'when the king is not in check' do
+      let(:board) { subject.rboard.board }
+
+      before do
+        allow(subject).to receive(:puts)
+        subject.rboard.board.each_with_index do |arr, aindex|
+          arr.each_with_index do |_square, sindex|
+            subject.rboard.board[aindex][sindex] = nil
+          end
+        end
+
+        board[0][4] = King.new(false)
+        board[2][4] = Knight.new(true)
+        board[6][4] = Queen.new(true)
+        board[7][0] = King.new(true)
+      end
+
+      it 'makes the move' do
+        subject.rboard.turn = false
+        error_message = 'Your king is in check!'.red
+        expect(subject).not_to receive(:puts).with(error_message)
+        subject.execute([0, 4], [1, 4], false, 'black', board[0][4])
+        # expect(board[1][4].name).to eq('K')
+      end
+    end
   end
 
   describe 'castling' do

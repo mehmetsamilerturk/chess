@@ -96,6 +96,8 @@ class Queen < Piece
     @name = 'Q'
   end
 
+  def check_jump_over; end
+
   def valid?(_board, start, to)
     ((to[0] - start[0]).abs == (to[1] - start[1]).abs) || (to[0] == start[0] || to[1] == start[1])
   end

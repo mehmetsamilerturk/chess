@@ -10,11 +10,13 @@ module Checkable
       if piece.white?
         unless square.nil?
           return false if square.white?
+          return false unless square.name == 'Q' || square.name == 'R'
           return true if !square.white? && (square.name == 'Q' || square.name == 'R')
         end
       else
         unless square.nil?
           return false unless square.white?
+          return false unless square.name == 'Q' || square.name == 'R'
           return true if square.white? && (square.name == 'Q' || square.name == 'R')
         end
       end
@@ -32,9 +34,11 @@ module Checkable
       unless square.nil?
         if piece.white?
           return false if square.white?
+          return false unless square.name == 'Q' || square.name == 'R'
           return true if !square.white? && (square.name == 'Q' || square.name == 'R')
         else
           return false unless square.white?
+          return false unless square.name == 'Q' || square.name == 'R'
           return true if square.white? && (square.name == 'Q' || square.name == 'R')
         end
       end
@@ -51,11 +55,13 @@ module Checkable
       if piece.white?
         unless square.nil?
           return false if square.white?
+          return false unless square.name == 'Q' || square.name == 'R'
           return true if !square.white? && (square.name == 'Q' || square.name == 'R')
         end
       else
         unless square.nil?
           return false unless square.white?
+          return false unless square.name == 'Q' || square.name == 'R'
           return true if square.white? && (square.name == 'Q' || square.name == 'R')
         end
       end
@@ -72,11 +78,13 @@ module Checkable
       if piece.white?
         unless square.nil?
           return false if square.white?
+          return false unless square.name == 'Q' || square.name == 'R'
           return true if !square.white? && (square.name == 'Q' || square.name == 'R')
         end
       else
         unless square.nil?
           return false unless square.white?
+          return false unless square.name == 'Q' || square.name == 'R'
           return true if square.white? && (square.name == 'Q' || square.name == 'R')
         end
       end
@@ -95,11 +103,13 @@ module Checkable
       if piece.white?
         unless square.nil?
           return false if square.white?
+          return false unless square.name == 'Q' || square.name == 'B'
           return true if !square.white? && (square.name == 'Q' || square.name == 'B')
         end
       else
         unless square.nil?
           return false unless square.white?
+          return false unless square.name == 'Q' || square.name == 'B'
           return true if square.white? && (square.name == 'Q' || square.name == 'B')
         end
       end
@@ -120,11 +130,13 @@ module Checkable
       if piece.white?
         unless square.nil?
           return false if square.white?
+          return false unless square.name == 'Q' || square.name == 'B'
           return true if !square.white? && (square.name == 'Q' || square.name == 'B')
         end
       else
         unless square.nil?
           return false unless square.white?
+          return false unless square.name == 'Q' || square.name == 'B'
           return true if square.white? && (square.name == 'Q' || square.name == 'B')
         end
       end
@@ -143,11 +155,13 @@ module Checkable
       if piece.white?
         unless square.nil?
           return false if square.white?
+          return false unless square.name == 'Q' || square.name == 'B'
           return true if !square.white? && (square.name == 'Q' || square.name == 'B')
         end
       else
         unless square.nil?
           return false unless square.white?
+          return false unless square.name == 'Q' || square.name == 'B'
           return true if square.white? && (square.name == 'Q' || square.name == 'B')
         end
       end
@@ -166,11 +180,13 @@ module Checkable
       if piece.white?
         unless square.nil?
           return false if square.white?
+          return false unless square.name == 'Q' || square.name == 'B'
           return true if !square.white? && (square.name == 'Q' || square.name == 'B')
         end
       else
         unless square.nil?
           return false unless square.white?
+          return false unless square.name == 'Q' || square.name == 'B'
           return true if square.white? && (square.name == 'Q' || square.name == 'B')
         end
       end

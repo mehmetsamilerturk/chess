@@ -126,3 +126,18 @@ class Chess
     end
   end
 end
+
+# game = Chess.new
+#
+# board = game.rboard.board
+# game.rboard.board.each_with_index do |arr, aindex|
+#   arr.each_with_index do |square, sindex|
+#     game.rboard.board[aindex][sindex] = nil
+#   end
+# end
+#
+# board[0][4] = King.new(false)
+# board[2][4] = Knight.new(true)
+# board[6][4] = Queen.new(true)
+# board[7][0] = King.new(true)
+# game.play
